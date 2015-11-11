@@ -14,51 +14,51 @@ struct MeshQuad
 
 class QuadMesh
 {
-private:
+ private:
 	
-	int maxMeshSize;
-	int minMeshSize;
-	float meshDim;
+  int maxMeshSize;
+  int minMeshSize;
+  float meshDim;
 
-	int numVertices;
-	MeshVertex *vertices;
+  int numVertices;
+  MeshVertex *vertices;
 
-	int numQuads;
-	MeshQuad *quads;
+  int numQuads;
+  MeshQuad *quads;
 
-	int numFacesDrawn;
+  int numFacesDrawn;
 	
-	GLfloat mat_ambient[4];
-	GLfloat mat_specular[4];
-	GLfloat mat_diffuse[4];
-	GLfloat mat_shininess[1];
+  GLfloat mat_ambient[4];
+  GLfloat mat_specular[4];
+  GLfloat mat_diffuse[4];
+  GLfloat mat_shininess[1];
 
 	
-private:
-	bool CreateMemory();
-	void FreeMemory();
+ private:
+  bool CreateMemory();
+  void FreeMemory();
 
-public:
+ public:
 
-	typedef std::pair<int, int> MaxMeshDim;
+  typedef std::pair<int, int> MaxMeshDim;
 
-	QuadMesh(int maxMeshSize = 40, float meshDim = 1.0f);
+  QuadMesh(int maxMeshSize = 40, float meshDim = 1.0f);
 	
-	~QuadMesh()
-	{
-		FreeMemory();
-	}
+  ~QuadMesh()
+    {
+      FreeMemory();
+    }
 
-	MaxMeshDim GetMaxMeshDimentions()
-	{
-		return MaxMeshDim(minMeshSize, maxMeshSize);
-	}
+  MaxMeshDim GetMaxMeshDimentions()
+  {
+    return MaxMeshDim(minMeshSize, maxMeshSize);
+  }
 	
-	bool InitMesh(int meshSize, VECTOR3D origin, double meshLength, double meshWidth,VECTOR3D dir1, VECTOR3D dir2);
-	void DrawMesh(int meshSize);
-	void UpdateMesh();
-	void SetMaterial(VECTOR3D ambient, VECTOR3D diffuse, VECTOR3D specular, double shininess);
-	void ComputeNormals();
+  bool InitMesh(int meshSize, VECTOR3D origin, double meshLength, double meshWidth,VECTOR3D dir1, VECTOR3D dir2);
+  void DrawMesh(int meshSize);
+  void UpdateMesh();
+  void SetMaterial(VECTOR3D ambient, VECTOR3D diffuse, VECTOR3D specular, double shininess);
+  void ComputeNormals();
 	
 };
 

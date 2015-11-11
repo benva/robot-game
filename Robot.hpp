@@ -4,25 +4,37 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#include <math.h>
+#include "VECTOR3D.h"
+
 class Robot {
 private:
-  float x, y, z;
+  VECTOR3D position;
   float angle;
   int health;
 public:
   // Constructors
-  Robot(float newX=0.0, float newY=0.0, float newZ=0.0) : x(newX), y(newY), z(newZ), angle(0.0), health(100) {}
+  Robot(float newX=0.0, float newY=0.0, float newZ=0.0) : angle(0.0), health(100) {
+    set(newX,newY,newZ);
+  }
 
   ~Robot(){}  
 
   void draw();
-  void set(float newX, float newY, float newZ) {x = newX; y = newY; z = newZ; }
+  void moveForward(float d);
+  void moveBackward(float d);
+  void rotate(float angle);
+  void set(float newX, float newY, float newZ) {
+    position.SetX(newX);
+    position.SetY(newY); 
+    position.SetZ(newZ);
+  }
   void setAngle(float newAngle) {angle = newAngle; }
   void damage(int hp) { health -= hp; }
 
-  float getX(void) {return x;}
-  float getY(void) {return y;}
-  float getZ(void) {return z;}
+  float getX(void) {return position.GetX();}
+  float getY(void) {return position.GetY();}
+  float getZ(void) {return position.GetZ();}
   float getAngle(void) {return angle;}
   int getHealth(void) {return health; }
 };
