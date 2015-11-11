@@ -1,0 +1,12 @@
+This program is to be compiled and run on a linux machine.
+There is a makefile included in this directory. Run it like any other makefile.
+ie:
+	> make
+
+And to remove all object files, exectuables, etc, run:
+        
+	> make clean
+
+This will produce an exectuable named 'Game'. Run with:
+     	
+	> ./Game
