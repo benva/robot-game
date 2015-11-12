@@ -29,7 +29,7 @@ QuadMesh::QuadMesh(int maxMeshSize, float meshDim)
 	mat_ambient[0] = 0.0;
 	mat_ambient[1] = 0.0;
 	mat_ambient[2] = 0.0;
-	mat_ambient[3] = 1.0;
+p	mat_ambient[3] = 1.0;
 	mat_specular[0] = 0.0;
 	mat_specular[1] = 0.0;
 	mat_specular[2] = 0.0;

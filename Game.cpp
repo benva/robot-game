@@ -14,7 +14,9 @@
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
 #include "Robot.hpp"
+#include "Room.hpp"
 #include "Game.hpp"
+
 
 using namespace std;
 
@@ -29,6 +31,7 @@ int main(int argc, char **argv) {
 
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
+glutMotionFunc(mouseMotionHandler);
 
   glutTimerFunc(FRAME_RATE, tick, 0);
   glutMainLoop();
@@ -71,20 +74,19 @@ void initOpenGL(int w, int h) {
   //Nice perspective.
   glHint(GL_PERSPECTIVE_CORRECTION_HINT , GL_NICEST);
 
-  // Set up meshes
-  VECTOR3D origin = VECTOR3D(-8.0f, 0.0f, 8.0f);
-  VECTOR3D dir1v = VECTOR3D(1.0f, 0.0f, 0.0f);
-  VECTOR3D dir2v  = VECTOR3D(0.0f, 0.0f,-1.0f);
-
-  floorMesh = new QuadMesh(meshSize, 16.0);
-  floorMesh->InitMesh(meshSize, origin, 16.0, 16.0, dir1v, dir2v);
-  
   VECTOR3D ambient = VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D specular= VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
   float shininess = 0.0;
-  floorMesh->SetMaterial(ambient,diffuse,specular,shininess);
-
+  
+room[0] = new Room();
+room[0]->initRoom(2,4,4);
+room[0]->addDoor(0,8,2);
+room[0]->addDoor(1,8,2);
+room[0]->addDoor(2,8,2);
+room[0]->addDoor(3,8,2);
+  room[0]->draw();
+  
 }
 
 // function to display everything to the screen
@@ -95,9 +97,9 @@ void display(void) {
   // Set up camera
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
-  floorMesh->DrawMesh(meshSize);
   // Draw the Room meshes
   //INSERT CODE
+  room[0]->draw();
 
   //Draw the Enemy Robots
   //INSERT CODE
@@ -122,11 +124,37 @@ void tick(int value) {
 
   // Update Avatar position
 
-  cout << r->getX() << endl;
+/*  cout << r->getX() << endl;
   cout << r->getHealth() << endl;
   r->draw();
-
+*/
 
   glutPostRedisplay();
   glutTimerFunc(FRAME_RATE, tick, 1);
+}
+
+//Updates camera coordinates
+void updateCamera() {
+      camZ = camR*sin(camTheta) * cos(camPhi);
+      camX = camR*sin(camTheta) * sin(camPhi);
+      camY = camR*cos(camTheta);
+}
+
+float map(float value, float from, float to) {
+  float output;
+  output = (to/from)*value;
+  return output;
+}
+
+
+// Mouse motion callback - use only if you want to 
+void mouseMotionHandler(int xMouse, int yMouse)
+{
+camTheta = map(500-yMouse,500,90)+270;
+camPhi = map(xMouse,500,360);
+camTheta = (camTheta * M_PI)/180;
+camPhi = (camPhi * M_PI)/180;
+updateCamera();
+ 
+  glutPostRedisplay();
 }
