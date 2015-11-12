@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define WIDTH 1280
+#define WIDTH 1000
 #define HEIGHT 800
 #define FRAME_RATE 50
 

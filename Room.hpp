@@ -5,6 +5,7 @@ typedef struct DoorWall {
   QuadMesh* section[3];
   float dd;
   float dw;
+  float size[3];
   VECTOR3D dir1v, dir2v;
   VECTOR3D origin;
 }DoorWall;

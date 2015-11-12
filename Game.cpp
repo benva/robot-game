@@ -80,7 +80,7 @@ void initOpenGL(int w, int h) {
   float shininess = 0.0;
   
 room[0] = new Room();
-room[0]->initRoom(2,4,4);
+room[0]->initRoom(3,6,4);
 room[0]->addDoor(0,8,2);
 room[0]->addDoor(1,8,2);
 room[0]->addDoor(2,8,2);

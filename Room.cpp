@@ -13,10 +13,10 @@ using namespace std;
 
 void Room::draw() {
   int i;
-  floor->DrawMesh(MESH_SIZE);
+  floor->DrawMesh(length*width);
 
   for(i=0;i<4;i++)
-    doorwall[i]->section[0]->DrawMesh(MESH_SIZE);
+    doorwall[i]->section[0]->DrawMesh(doorwall[i]->size[0]);
 }
 
 bool Room::initRoom(float newHeight, float newLength, float newWidth) {
@@ -30,8 +30,8 @@ bool Room::initRoom(float newHeight, float newLength, float newWidth) {
     origin = VECTOR3D(0.0f, 0.0f, 0.0f);
   }
 
-  floor = new QuadMesh(MESH_SIZE);
-  floor->InitMesh(MESH_SIZE, origin, length, width, dir1v, dir2v);
+  floor = new QuadMesh(length*width);
+  floor->InitMesh(length*width, origin, length, width, dir1v, dir2v);
   return true;
 }
 
@@ -52,15 +52,22 @@ bool Room::addDoor(int wallid, float dw, float dd) {
 
   cout << "dir2v: " <<doorwall[wallid]->dir2v.GetX() << " " << doorwall[wallid]->dir2v.GetY() << " " << doorwall[wallid]->dir2v.GetZ()<< endl << endl;
 
-  for(i=0;i<3;i++)
-    doorwall[wallid]->section[i] = new QuadMesh(MESH_SIZE);
 
-  if(wallid%2 == 0) 
-    doorwall[wallid]->section[0]->InitMesh(MESH_SIZE, doorwall[wallid]->origin, length, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
-  else
-        doorwall[wallid]->section[0]->InitMesh(MESH_SIZE, doorwall[wallid]->origin, width, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
-
-  return true;
+  if(wallid%2 == 0) {
+    for(i=0;i<3;i++){
+      doorwall[wallid]->size[i] = length*height;
+      doorwall[wallid]->section[i] = new QuadMesh(length*height);
+    }
+    doorwall[wallid]->section[0]->InitMesh(length*height, doorwall[wallid]->origin, length, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
+  }
+  else {
+    for(i=0;i<3;i++){
+      doorwall[wallid]->size[i] = width*height;
+      doorwall[wallid]->section[i] = new QuadMesh(width*height);
+    }
+    doorwall[wallid]->section[0]->InitMesh(width*height, doorwall[wallid]->origin, width, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
+  }
+return true;
 }
 
 VECTOR3D Room::calcNewOrigin(int wallid) {
