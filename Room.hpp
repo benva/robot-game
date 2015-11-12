@@ -1,6 +1,25 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+/*
+initRoom(h,l,w) 
+addDoor(wallid, dw, dd, dh)
+
+top view:
+   ________
+  |   2    |
+w |3      1|
+  |->_0____|
+o     l
+
+wall view: 
+     ___________
+    |   __      |
+hgt |  |  |dh   |
+    |->|  |_____|
+  o  dd dw
+
+*/
 typedef struct DoorWall {
   QuadMesh* section[3];
   float dd;
