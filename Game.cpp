@@ -81,11 +81,10 @@ void initOpenGL(int w, int h) {
   
 room[0] = new Room();
 room[0]->initRoom(3,6,4);
-room[0]->addDoor(0,8,2);
-room[0]->addDoor(1,8,2);
-room[0]->addDoor(2,8,2);
-room[0]->addDoor(3,8,2);
-  room[0]->draw();
+room[0]->addDoor(2,1,4,2);
+room[0]->addDoor(1,1,2,2);
+room[0]->draw();
+
   
 }
 

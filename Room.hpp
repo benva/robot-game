@@ -4,10 +4,14 @@
 typedef struct DoorWall {
   QuadMesh* section[3];
   float dd;
-  float dw;
+  float dwidth;
+  float dh;
   float size[3];
+  float len[3];
+  float hgt[3];
+  VECTOR3D origin[3];
+  float length;
   VECTOR3D dir1v, dir2v;
-  VECTOR3D origin;
 }DoorWall;
 
 class Room {
@@ -29,7 +33,7 @@ public:
 
   bool initRoom(float newHeight=1.0, float newLength=8.0, float newWidth=6.0); 
   void draw();
-  bool addDoor(int wallid, float dw, float dd);
+  bool addDoor(int wallid, float dw, float dd, float dh);
 
 };
 

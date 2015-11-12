@@ -12,14 +12,22 @@
 using namespace std;
 
 void Room::draw() {
-  int i;
+  int i,j;
+
   floor->DrawMesh(length*width);
 
-  for(i=0;i<4;i++)
-    doorwall[i]->section[0]->DrawMesh(doorwall[i]->size[0]);
+  for(i=0;i<4;i++) {
+    if(doorwall[i]->dd == -1){
+      doorwall[i]->section[0]->DrawMesh(doorwall[i]->size[0]);
+    } else {
+      for(j=0; j<3; j++) 
+	doorwall[i]->section[j]->DrawMesh(doorwall[i]->size[j]);
+    }
+  }
 }
 
 bool Room::initRoom(float newHeight, float newLength, float newWidth) {
+  int i;
   height = newHeight;
   length = newLength;
   width = newWidth;
@@ -32,41 +40,55 @@ bool Room::initRoom(float newHeight, float newLength, float newWidth) {
 
   floor = new QuadMesh(length*width);
   floor->InitMesh(length*width, origin, length, width, dir1v, dir2v);
+  
+  for(i=0;i<4;i++)
+    addDoor(i,-1,-1,-1);
+
+
   return true;
 }
 
-bool Room::addDoor(int wallid, float dw, float dd) {
-  VECTOR3D sec1origin=origin, sec2origin=origin;
+bool Room::addDoor(int wallid, float dwidth, float dd, float dh) {
   int i;
-  if(doorwall[wallid] != NULL) return false;
-  
-  doorwall[wallid] = (DoorWall*) calloc (1, sizeof(DoorWall));
-  doorwall[wallid]->dd = dd;
-  doorwall[wallid]->dw = dw;
-  doorwall[wallid]->origin = calcNewOrigin(wallid);
-  doorwall[wallid]->dir2v = dir1v.CrossProduct(dir2v);
-  doorwall[wallid]->dir1v = newDir1(wallid, doorwall[wallid]->dir2v);
+  doorwall[wallid] = (DoorWall*) calloc (1,sizeof(DoorWall));
+  DoorWall * dw = doorwall[wallid];
+
+  dw->length = wallid%2 == 0? length : width;
+  dw->origin[0] = calcNewOrigin(wallid);
+  dw->dir2v = dir1v.CrossProduct(dir2v);
+  dw->dir1v = newDir1(wallid, dw->dir2v);
+  dw->dd = dd;
 
   cout << wallid << endl;
-  cout << "dir1v: " << doorwall[wallid]->dir1v.GetX() << " " << doorwall[wallid]->dir1v.GetY() << " " << doorwall[wallid]->dir1v.GetZ()<< endl;
+  cout << "dir1v: " << dw->dir1v.GetX() << " " << dw->dir1v.GetY() << " " << dw->dir1v.GetZ()<< endl;
 
-  cout << "dir2v: " <<doorwall[wallid]->dir2v.GetX() << " " << doorwall[wallid]->dir2v.GetY() << " " << doorwall[wallid]->dir2v.GetZ()<< endl << endl;
+  cout << "dir2v: " <<dw->dir2v.GetX() << " " << dw->dir2v.GetY() << " " << dw->dir2v.GetZ()<< endl << endl;
 
-
-  if(wallid%2 == 0) {
-    for(i=0;i<3;i++){
-      doorwall[wallid]->size[i] = length*height;
-      doorwall[wallid]->section[i] = new QuadMesh(length*height);
-    }
-    doorwall[wallid]->section[0]->InitMesh(length*height, doorwall[wallid]->origin, length, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
+  dw->origin[1] = dw->origin[0] + dw->dir1v*dd + dw->dir2v*dh;
+  dw->origin[2] = dw->origin[0] + dw->dir1v*(dd+dwidth);
+  
+  if(dd != -1) {
+    dw->len[0] = dd;
+    dw->len[1] = dwidth;
+    dw->len[2] = dw->length-dd-dwidth;
+    dw->hgt[0] = height;
+    dw->hgt[1] = height-dh;
+    dw->hgt[2] = height;
   }
-  else {
-    for(i=0;i<3;i++){
-      doorwall[wallid]->size[i] = width*height;
-      doorwall[wallid]->section[i] = new QuadMesh(width*height);
+
+
+  if(dd != -1) {
+    for(i=0;i<3;i++) {
+      dw->size[i] = dw->len[i]*dw->hgt[i];
+      dw->section[i] = new QuadMesh(dw->size[i]);
+      dw->section[i]->InitMesh(dw->size[i], dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
     }
-    doorwall[wallid]->section[0]->InitMesh(width*height, doorwall[wallid]->origin, width, height, doorwall[wallid]->dir1v, doorwall[wallid]->dir2v);
-  }
+  } else {
+    dw->size[0] = dw->length*height;
+    dw->section[0] = new QuadMesh(dw->size[0]);
+    dw->section[0]->InitMesh(dw->size[0], dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
+  }    
+
 return true;
 }
 
