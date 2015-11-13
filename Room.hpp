@@ -20,8 +20,12 @@ hgt |  |  |dh   |
   o  dd dw
 
 */
+#define MESH_SIZE 16
+#define DOOR_FRAME 0.5
+
 typedef struct DoorWall {
   QuadMesh* section[3];
+  QuadMesh * doorframe[4];
   float dd;
   float dw;
   float dh;
@@ -50,7 +54,7 @@ private:
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
-
+  void initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw);
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall;}
   ~Room() {}

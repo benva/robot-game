@@ -7,7 +7,7 @@
 #include "QuadMesh.h"
 #include "Room.hpp"
 
-#define MESH_SIZE 16
+
 
 using namespace std;
 
@@ -22,6 +22,8 @@ void Room::draw() {
     } else {
       for(j=0; j<3; j++) 
 	doorwall[i]->section[j]->DrawMesh(1.0);
+      for(j=0; j<4; j++)
+      doorwall[i]->doorframe[j]->DrawMesh(1.0);
     }
   }
 }
@@ -49,6 +51,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     origin = calcNewOrigin((parent_wall+1)%4, neighbor[0]->origin);
     // fix parent vectors AFTER origin has been calculated
     fixParentVectors(&dir1v,&dir2v,parent_wall);
+    origin += dir2v*DOOR_FRAME;
     // let parent know where you are
     neighbor[0]->addNeighbor(this, parent_wall);
 
@@ -127,6 +130,8 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
       dw->section[i] = new QuadMesh(1.0,1.0);
       dw->section[i]->InitMesh(1.0, dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
     }
+    // Create doorframe meshes
+    initDoorFrame(dw->doorframe, dw->dir1v, dw->dir2v, dw->origin[1], dw->dh, dw->dw);
     // If this is a doorless wall, create just the first quadmesh
   } else {
     dw->section[0] = new QuadMesh(1.0,1.0);
@@ -174,4 +179,17 @@ bool Room::addNeighbor(Room* newNeighbor, int wallid) {
   if(neighbor[wallid] != NULL) return false;
   neighbor[wallid] = newNeighbor;
   return true;
+}
+
+// pass along dir1v and dir2v of the wall, origin of the top left (from inside) corner of door (ie origin of panel[1]) door height(dh) and doorwidth (dw) and write doorframe data to QuadMesh * doorframe array
+void Room::initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw) {
+  int i;
+  //  dir2v *= -1;
+  dir2v = dir1v.CrossProduct(dir2v);
+  for(i=0; i<4; i++) {
+    doorframe[i] = new QuadMesh(1.0,1.0);
+    doorframe[i]->InitMesh(1.0, origin, DOOR_FRAME/2, (i%2==0? dw : dh), dir2v, dir1v);
+    origin += dir1v*(i%2==0? dw : dh);
+    dir1v = dir1v.CrossProduct(dir2v);
+  }
 }
