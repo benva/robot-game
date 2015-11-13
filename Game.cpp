@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
-glutMotionFunc(mouseMotionHandler);
+  glutMotionFunc(mouseMotionHandler);
 
   glutTimerFunc(FRAME_RATE, tick, 0);
   glutMainLoop();
@@ -79,17 +79,19 @@ void initOpenGL(int w, int h) {
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
   float shininess = 0.0;
   
-room[0] = new Room();
-room[0]->initRoom(3,6,4);
-room[0]->addDoor(2,1,4,2);
-room[0]->addDoor(1,1,2,2);
-room[0]->draw();
-
-  
+  room[0] = new Room();
+  room[0]->initRoom();
+  room[1] = new Room(room[0],3);
+  room[1]->initRoom();
+  room[2] = new Room(room[1],1);
+  room[2]->initRoom();
+  room[3] = new Room(room[1],3);
+  room[3]->initRoom(6,6);
 }
 
 // function to display everything to the screen
 void display(void) {
+  int i=0;
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
 
@@ -98,8 +100,10 @@ void display(void) {
 
   // Draw the Room meshes
   //INSERT CODE
-  room[0]->draw();
-
+  while(room[i] != NULL) {
+    room[i]->draw();
+    i++;
+  }
   //Draw the Enemy Robots
   //INSERT CODE
 

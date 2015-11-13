@@ -1,4 +1,4 @@
-#ifndef GAME_H
+#ifndef GAME_H2
 #define GAME_H
 
 #define WIDTH 1000
@@ -26,7 +26,7 @@ float camX=0.0, camY=6.0, camZ=22.0, camR=10.0,
   camTheta, camPhi;
 
 
-Room *room[64];
+Room *room[16];
 
 float meshSize = 16.0;
 Robot *r = new Robot();
