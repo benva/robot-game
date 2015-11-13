@@ -193,3 +193,4 @@ void Room::initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v
     dir1v = dir1v.CrossProduct(dir2v);
   }
 }
+
