@@ -81,13 +81,12 @@ void initOpenGL(int w, int h) {
   
   room[0] = new Room();
   room[0]->initRoom();
-  room[0]->addDoor(2);
   room[1] = new Room(room[0],3);
   room[1]->initRoom();
-  // room[2] = new Room(room[1],1);
-  // room[2]->initRoom();
-  // room[3] = new Room(room[1],3);
-  // room[3]->initRoom(6,6);
+  room[2] = new Room(room[1],1);
+  room[2]->initRoom();
+  room[3] = new Room(room[1],3);
+  room[3]->initRoom(6,6);
  
 }
 

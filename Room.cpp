@@ -32,6 +32,8 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
   length = newLength;
   width = newWidth;
 
+
+
   // If this room is the head of the roomtree, set values accordingly
   if(neighbor[0] == NULL) {
     dir1v = VECTOR3D(1.0f, 0.0f, 0.0f);
@@ -50,14 +52,34 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     // let parent know where you are
     neighbor[0]->addNeighbor(this, parent_wall);
 
+  }
+  // Create doorless walls for room
+  for(i=0;i<4;i++)
+    addDoor(i,-1,-1,-1);
+ 
+  // If there is a parent, make a door with it
+  if(neighbor[0] != NULL) {
+    // Case where parent doesn't have a door yet on connecting wall
+    if(neighbor[0]->doorwall[parent_wall]->dd == -1) {
+      // dd will need to be different for each, dh and dwidth stay same
+      float len_child = doorwall[0]->length;
+      float len_parent = neighbor[0]->doorwall[parent_wall]->length;
+      // if parent is wider = width_child/2
 
+      if(len_child <= len_parent) {
+	addDoor(0,len_child/2);
+	neighbor[0]->addDoor(parent_wall, len_parent-len_child/2);
+	// if child is wider= width_parent/2
+      } else {
+	neighbor[0]->addDoor(parent_wall, len_parent/2);
+	addDoor(0, len_parent/2);
+      }
+    }
   }
 
   floor = new QuadMesh(1.0,1.0);
   floor->InitMesh(1.0, origin, length, width, dir1v, dir2v);
   
-  for(i=0;i<4;i++)
-    addDoor(i,-1,-1,-1);
 
   return true;
 }
