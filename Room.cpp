@@ -130,8 +130,6 @@ void Room::fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall) {
   VECTOR3D tmp;
   *dir2v *= -1;
   *dir1v *= -1;
-  cout<<dir1v->GetX()<<dir1v->GetY()<<dir1v->GetZ()<<endl;
-  cout<<dir2v->GetX()<<dir2v->GetY()<<dir2v->GetZ()<<endl;
   for(i=0;i<pwall;i++) {
     tmp = *dir2v;
     *dir2v = *dir1v * -1;
