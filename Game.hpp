@@ -17,7 +17,7 @@ void functionKeys(int key, int x, int y);
 void tick(int value);
 void keyUp (int, int, int);
 void setTexture(RGBpixmap *tex, GLuint textureID);
-bool loadTexture(RGBpixmap *tex, char path[]);
+bool loadTexture(int i, char path[]);
 
 GLfloat light_position0[] = {-6.0,  12.0, 0.0,1.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};

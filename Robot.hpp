@@ -4,8 +4,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include <math.h>
-#include "VECTOR3D.h"
+
 
 class Robot {
 private:
@@ -20,7 +19,7 @@ public:
 
   ~Robot(){}  
 
-  void draw();
+  void draw(GLuint texid);
   void moveForward(float d);
   void moveBackward(float d);
   void rotate(float angle);

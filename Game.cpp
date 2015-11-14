@@ -90,9 +90,7 @@ int i;
     texid[i] = 2000+i;
   }
   
-  cout << "tex[0] a: " << tex[0] << endl;
-  loadTexture(tex[0], "textures/Mandrill.bmp");
-  cout << "tex[0] b: " << tex[0] << endl;
+  loadTexture(0, "textures/Mandrill.bmp");
   
   i=-1;
   while(tex[++i] != NULL){
@@ -109,11 +107,9 @@ int i;
  
 }
 
-bool loadTexture(RGBpixmap * tex, char path[]) {
-  cout << "tex a: " << tex << endl;
-  tex = new RGBpixmap;
-  cout << "tex b: " << tex << endl;
-  tex->readBMPFile(path);
+bool loadTexture(int i, char path[]) {
+  tex[i] = new RGBpixmap;
+  tex[i]->readBMPFile(path);
   return true;
 }
 
@@ -122,7 +118,6 @@ void setTexture(RGBpixmap * tex, GLuint textureID) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->nCols, tex->nRows, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixel);
-  cout << "WHAT"<<endl;
 }
 
 // function to display everything to the screen
@@ -142,6 +137,7 @@ void display(void) {
 
   //Draw the Enemy Robots
   //INSERT CODE
+  r->draw(2000);
 
   //Draw avatar
   //INSERT CODE
