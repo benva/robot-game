@@ -23,9 +23,21 @@ hgt |  |  |dh   |
 #define MESH_SIZE 16
 #define DOOR_FRAME 0.5
 
+typedef struct TextureQuad {
+  VECTOR3D origin;
+  VECTOR3D dir1v;
+  VECTOR3D dir2v;
+  float width;
+  float length;
+}TextureQuad;
+
 typedef struct DoorWall {
   QuadMesh* section[3];
   QuadMesh * doorframe[4];
+  
+  TextureQuad * tsection[3];
+  TextureQuad * tdoorframe[4];
+
   float dd;
   float dw;
   float dh;
@@ -49,12 +61,20 @@ private:
   int parent_wall;
 
   DoorWall* doorwall[4];
+
   QuadMesh* floor;
+  TextureQuad* tfloor;
+
+  GLuint * floor_texture;
+  GLuint * wall_texture;
 
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
   void initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw);
+  void drawTexture(TextureQuad * quad, GLuint texid);
+  TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
+
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall;}
   ~Room() {}

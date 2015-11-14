@@ -12,9 +12,11 @@
 #include <vector>
 
 #include "VECTOR3D.h"
+#include "RGBpixmap.h"
 #include "QuadMesh.h"
 #include "Robot.hpp"
 #include "Room.hpp"
+
 #include "Game.hpp"
 
 
@@ -40,6 +42,7 @@ int main(int argc, char **argv) {
 
 // Setup openGL
 void initOpenGL(int w, int h) {
+int i;
   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -68,8 +71,13 @@ void initOpenGL(int w, int h) {
   glClearColor(0.6, 0.6, 0.6, 0.0);  
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
+
+  //Enable textures
+  glEnable(GL_TEXTURE_2D);
+
   // This one is important - renormalize normal vectors 
   glEnable(GL_NORMALIZE);
+
   
   //Nice perspective.
   glHint(GL_PERSPECTIVE_CORRECTION_HINT , GL_NICEST);
@@ -77,8 +85,19 @@ void initOpenGL(int w, int h) {
   VECTOR3D ambient = VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D specular= VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
-  float shininess = 0.0;
+
+  for(i=0; i<NUM_TEX; i++) {
+    texid[i] = 2000+i;
+  }
   
+  cout << "tex[0] a: " << tex[0] << endl;
+  loadTexture(tex[0], "textures/Mandrill.bmp");
+  cout << "tex[0] b: " << tex[0] << endl;
+  
+  i=-1;
+  while(tex[++i] != NULL){
+    setTexture(tex[i], texid[i]);
+  }
   room[0] = new Room();
   room[0]->initRoom();
   room[1] = new Room(room[0],3);
@@ -90,9 +109,25 @@ void initOpenGL(int w, int h) {
  
 }
 
+bool loadTexture(RGBpixmap * tex, char path[]) {
+  cout << "tex a: " << tex << endl;
+  tex = new RGBpixmap;
+  cout << "tex b: " << tex << endl;
+  tex->readBMPFile(path);
+  return true;
+}
+
+void setTexture(RGBpixmap * tex, GLuint textureID) {
+  glBindTexture(GL_TEXTURE_2D, textureID);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->nCols, tex->nRows, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixel);
+  cout << "WHAT"<<endl;
+}
+
 // function to display everything to the screen
 void display(void) {
-  int i=0;
+  int i;
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
 
@@ -100,11 +135,11 @@ void display(void) {
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
   // Draw the Room meshes
-  //INSERT CODE
-  while(room[i] != NULL) {
+
+  i=-1;
+  while(room[++i] != NULL)
     room[i]->draw();
-    i++;
-  }
+
   //Draw the Enemy Robots
   //INSERT CODE
 
@@ -154,12 +189,12 @@ float map(float value, float from, float to) {
 // Mouse motion callback - use only if you want to 
 void mouseMotionHandler(int xMouse, int yMouse)
 {
-camTheta = map(500-yMouse,500,90)+270;
-camPhi = map(xMouse,500,360);
-camTheta = (camTheta * M_PI)/180;
-camPhi = (camPhi * M_PI)/180;
-updateCamera();
- 
+  camTheta = map(500-yMouse,500,90)+270;
+  camPhi = map(xMouse,500,360);
+  camTheta = (camTheta * M_PI)/180;
+  camPhi = (camPhi * M_PI)/180;
+  updateCamera();
+
   glutPostRedisplay();
 }
 

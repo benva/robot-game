@@ -3,16 +3,18 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+
+#include "RGBpixmap.h"
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
 #include "Room.hpp"
-
-
 
 using namespace std;
 
 void Room::draw() {
   int i,j;
+  TextureQuad * q;
+  drawTexture(q,2000);
 
   floor->DrawMesh(1.0);
 
@@ -143,10 +145,10 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
 
 // returns origin of each corner based on the wall id
 VECTOR3D Room::calcNewOrigin(int wallid, VECTOR3D origin) {
-  if(wallid == 0) return origin;
   if(wallid == 1) return origin + (dir1v*length);
   if(wallid == 2) return origin + (dir1v*length) + (dir2v*width);
   if(wallid == 3) return origin + (dir2v*width);
+  return origin;
 }
 
 // converts dir1v into an updated dir1v with appropriate rotation about axis up
@@ -194,3 +196,27 @@ void Room::initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v
   }
 }
 
+// Draw Texture 
+void Room::drawTexture(TextureQuad * quad, GLuint texid) {
+  
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+  glPushMatrix();
+  glBindTexture(GL_TEXTURE_2D, texid);
+  glBegin(GL_QUADS);
+  glTexCoord2f( 0.0, 0.0);
+  glVertex3f(-1.0f, 3.0f, -1.0f);
+  glTexCoord2f( 0.0, 1.0);
+  glVertex3f(-1.0f, 3.0f,  1.0f);
+  glTexCoord2f( 1.0, 1.0);
+  glVertex3f( 1.0f, 3.0f,  1.0f);
+  glTexCoord2f( 1.0, 0.0);
+  glVertex3f( 1.0f, 3.0f, -1.0f);
+  glEnd();
+  glFlush();
+  glPopMatrix();
+}
+
+TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v){
+  
+}
