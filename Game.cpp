@@ -60,11 +60,15 @@ int i;
   
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
+
   glShadeModel(GL_SMOOTH);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
-  
+
+  glEnable(GL_COLOR_MATERIAL);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
   // Other OpenGL setup
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
@@ -87,24 +91,36 @@ int i;
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
 
   for(i=0; i<NUM_TEX; i++) {
-    texid[i] = 2000+i;
-  }
+    texid[i] = 2000+i; 
+ }
   
-  loadTexture(0, "textures/Mandrill.bmp");
+  loadTexture(0, "textures/rock.bmp");
+  loadTexture(1, "textures/brick1.bmp");
+  loadTexture(2, "textures/brick2.bmp");
+  loadTexture(3, "textures/stone1.bmp");
+  loadTexture(4, "textures/stone2.bmp");
+  loadTexture(5, "textures/stone3.bmp");
+  loadTexture(6, "textures/wood.bmp");
   
   i=-1;
   while(tex[++i] != NULL){
     setTexture(tex[i], texid[i]);
   }
+
   room[0] = new Room();
   room[0]->initRoom();
+
   room[1] = new Room(room[0],3);
   room[1]->initRoom();
+  room[1]->setTextures(texid[5],texid[6]);
+
   room[2] = new Room(room[1],1);
   room[2]->initRoom();
+  room[2]->setTextures(texid[2],texid[3]);
+
   room[3] = new Room(room[1],3);
   room[3]->initRoom(6,6);
- 
+  room[3]->setTextures(texid[4],texid[0]);
 }
 
 bool loadTexture(int i, char path[]) {
@@ -115,8 +131,10 @@ bool loadTexture(int i, char path[]) {
 
 void setTexture(RGBpixmap * tex, GLuint textureID) {
   glBindTexture(GL_TEXTURE_2D, textureID);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->nCols, tex->nRows, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixel);
 }
 

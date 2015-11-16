@@ -65,23 +65,25 @@ private:
   QuadMesh* floor;
   TextureQuad* tfloor;
 
-  GLuint * floor_texture;
-  GLuint * wall_texture;
+  GLuint floor_texture;
+  GLuint wall_texture;
+  GLuint door_texture;
 
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
-  void initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw);
-  void drawTexture(TextureQuad * quad, GLuint texid);
+  void initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth);
+  void drawTexture(TextureQuad * tq, GLuint texid, float mult);
   TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
 
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall;}
   ~Room() {}
-  bool initRoom(float newLength=3.0, float newWidth=4.0, float newHeight=2.0); 
+  bool initRoom(float newLength=3.0, float newWidth=4.0, float newHeight=3.0); 
   void draw();
-  bool addDoor(int wallid, float dd=1.0, float dh=1.5, float dwidth=1.0);
+  bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.0);
   bool addNeighbor(Room* newNeighbor, int wallid);
+  void setTextures(GLuint wall, GLuint floor, GLuint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
 };
 
 #endif
