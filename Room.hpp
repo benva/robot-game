@@ -73,7 +73,7 @@ private:
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
   void initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth);
-  void drawTexture(TextureQuad * tq, GLuint texid, float mult);
+  void drawTexture(TextureQuad * tq, GLuint texid, float mult1, float mult2);
   TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
 
 public:
@@ -83,7 +83,7 @@ public:
   void draw();
   bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.0);
   bool addNeighbor(Room* newNeighbor, int wallid);
-  void setTextures(GLuint wall, GLuint floor, GLuint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
+  void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
 };
 
 #endif

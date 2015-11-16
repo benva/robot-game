@@ -84,14 +84,22 @@ void Robot::draw(GLuint texid) {
   glPopMatrix();
 }
 
-void Robot::moveForward(float d) {
-
-}
-
-void Robot::moveBackward(float d) {
-
-}
-
-void Robot::rotate(float angle) {
-
+void Robot::move(bool up, bool down, bool left, bool right) {
+  float angle, tx, tz;
+  if(left) this->angle -= ROT_INC;
+  if(right) this->angle += ROT_INC;
+  
+  angle = (this->angle * M_PI)/180;
+  tx = MOV_INC * sin(angle);
+  tz = MOV_INC * cos(angle);
+  
+  if(up) {
+    position.SetX(position.GetX() + tx);
+    position.SetX(position.GetZ() + tz);
+  }
+  else if(down) {
+    position.SetX(position.GetX() - tx);
+    position.SetX(position.GetZ() - tz);
+  }
+  
 }

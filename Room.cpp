@@ -14,21 +14,21 @@ using namespace std;
 void Room::draw() {
   int i,j;
 
-  drawTexture(tfloor, floor_texture,0.5);
+  drawTexture(tfloor, floor_texture,0.5,0.5);
 
   floor->DrawMesh(1.0);
 
   for(i=0;i<4;i++) {
     if(doorwall[i]->dd == -1){
-      drawTexture(doorwall[i]->tsection[0], wall_texture,1);
+      drawTexture(doorwall[i]->tsection[0], wall_texture,1,1);
       //      doorwall[i]->section[0]->DrawMesh(1.0);
     } else {
       for(j=0; j<3; j++) {
-	drawTexture(doorwall[i]->tsection[j], wall_texture,1);
+	drawTexture(doorwall[i]->tsection[j], wall_texture,1,1);
 	//doorwall[i]->section[j]->DrawMesh(1.0);
       }
       for(j=0; j<4; j++) {
-	drawTexture(doorwall[i]->tdoorframe[j], door_texture,1);
+	drawTexture(doorwall[i]->tdoorframe[j], door_texture,1,1);
 	//	doorwall[i]->doorframe[j]->DrawMesh(1.0);
       }
     }
@@ -92,7 +92,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
 
   floor = new QuadMesh(1.0,1.0);
   floor->InitMesh(1.0, origin, length, width, dir1v, dir2v);
-  tfloor = makeTQ(origin,length,width,dir1v,dir2v);
+  tfloor = makeTQ(origin,width,length,dir2v,dir1v);
 
   return true;
 }
@@ -208,10 +208,10 @@ void Room::initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D
 }
 
 // Draw Texture 
-void Room::drawTexture(TextureQuad * tq, GLuint texid, float mult) {  
+void Room::drawTexture(TextureQuad * tq, GLuint texid, float mult1, float mult2) {  
   VECTOR3D origin = tq->origin;
-  float len=tq->length*mult;
-  float wid=tq->width*mult;
+  float len=tq->length*mult1;
+  float wid=tq->width*mult2;
 
   // MUST BE CHANGED BACK TO GL_MODULATE 
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);

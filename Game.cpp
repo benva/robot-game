@@ -33,7 +33,12 @@ int main(int argc, char **argv) {
 
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
+  glutMouseFunc(mouse);
   glutMotionFunc(mouseMotionHandler);
+  //  glutPassiveMotionFunc(mousePassiveHandler);
+  
+  glutSpecialFunc(functionKeys);
+  glutSpecialUpFunc(functionKeysUp);
 
   glutTimerFunc(FRAME_RATE, tick, 0);
   glutMainLoop();
@@ -75,6 +80,9 @@ int i;
   glClearColor(0.6, 0.6, 0.6, 0.0);  
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
+  
+  // Probably good to enable
+  glEnable(GL_CULL_FACE);
 
   //Enable textures
   glEnable(GL_TEXTURE_2D);
@@ -82,7 +90,11 @@ int i;
   // This one is important - renormalize normal vectors 
   glEnable(GL_NORMALIZE);
 
+  // Hide Cursor
+  glutSetCursor(GLUT_CURSOR_NONE);
   
+
+
   //Nice perspective.
   glHint(GL_PERSPECTIVE_CORRECTION_HINT , GL_NICEST);
 
@@ -101,6 +113,7 @@ int i;
   loadTexture(4, "textures/stone2.bmp");
   loadTexture(5, "textures/stone3.bmp");
   loadTexture(6, "textures/wood.bmp");
+
   
   i=-1;
   while(tex[++i] != NULL){
@@ -123,7 +136,7 @@ int i;
   room[3]->setTextures(texid[4],texid[0]);
 }
 
-bool loadTexture(int i, char path[]) {
+bool loadTexture(int i, char const * path) {
   tex[i] = new RGBpixmap;
   tex[i]->readBMPFile(path);
   return true;
@@ -176,11 +189,17 @@ void tick(int value) {
   // Call Evil robot move methods
 
   // Update Avatar position
+  r->move(key_up, key_down, key_left, key_right);
+  
+  camera = r->getPos();
 
-/*  cout << r->getX() << endl;
-  cout << r->getHealth() << endl;
-  r->draw();
-*/
+  if(!above_view) {
+    camX = r->getX();
+    camY = r->getY();
+    camZ = r->getZ();
+  }
+
+  printf("%s", key_up == true? "UP":"");
 
   glutPostRedisplay();
   glutTimerFunc(FRAME_RATE, tick, 1);
@@ -199,10 +218,19 @@ float map(float value, float from, float to) {
   return output;
 }
 
+void mouse(int button, int state, int x, int y) {
+  if(state == GLUT_UP)
+    if(button == GLUT_LEFT_BUTTON) {
+      above_view=false;
+      glutSetCursor(GLUT_CURSOR_NONE);
+    }
+}
 
 // Mouse motion callback - use only if you want to 
 void mouseMotionHandler(int xMouse, int yMouse)
 {
+  above_view = true;
+  glutSetCursor(GLUT_CURSOR_CROSSHAIR);
   camTheta = map(500-yMouse,500,90)+270;
   camPhi = map(xMouse,500,360);
   camTheta = (camTheta * M_PI)/180;
@@ -212,3 +240,46 @@ void mouseMotionHandler(int xMouse, int yMouse)
   glutPostRedisplay();
 }
 
+// Updates global mouse coordinates passively
+void mousePassiveHandler(int xMouse, int yMouse) {
+  mouse_x = xMouse;
+  mouse_y = yMouse;
+  
+  mouseWorld = screenToWorld();
+  /*  lookAtX=mouseWorld.GetX();
+  lookAtY=mouseWorld.GetY();
+  lookAtZ=mouseWorld.GetZ();
+  */
+}
+
+void functionKeys(int key, int x, int y) {
+  if(key == GLUT_KEY_UP) key_up = true;
+  if(key == GLUT_KEY_DOWN) key_down = true;
+  if(key == GLUT_KEY_RIGHT) key_right = true;
+  if(key == GLUT_KEY_LEFT) key_left = true;
+}
+
+void functionKeysUp(int key, int x, int y) {
+  if(key == GLUT_KEY_UP) key_up = false;
+  if(key == GLUT_KEY_DOWN) key_down = false;
+  if(key == GLUT_KEY_RIGHT) key_right = false;
+  if(key == GLUT_KEY_LEFT) key_left = false;
+}
+
+VECTOR3D screenToWorld() {
+  VECTOR3D coord;
+  GLdouble projection[16];
+  GLdouble modelview[16];
+  GLint viewport[4];
+  GLdouble pos[3];
+
+  glGetDoublev(GL_PROJECTION_MATRIX, projection);
+  glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+  glGetIntegerv(GL_VIEWPORT, viewport);
+  
+  gluUnProject(mouse_x, mouse_y, 1.0f, modelview, projection, viewport, &pos[0], &pos[1], &pos[2]);
+  
+  coord = VECTOR3D(pos[0],pos[1],pos[2]);
+  cout << coord.GetX() << " " << coord.GetY() << " " << coord.GetZ() << endl;
+  return coord;
+}
