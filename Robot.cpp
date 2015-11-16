@@ -1,3 +1,11 @@
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#include <math.h>
+
+#include "VECTOR3D.h"
 #include "Robot.hpp"
 
 
