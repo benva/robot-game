@@ -16,6 +16,8 @@
 #include "QuadMesh.h"
 #include "Robot.hpp"
 #include "Room.hpp"
+#include "Avatar.hpp"
+#include "EvilRobot.hpp"
 
 #include "Game.hpp"
 
@@ -168,11 +170,11 @@ void display(void) {
 
   //Draw the Enemy Robots
   //INSERT CODE
-  avatar->draw(2000);
 
   //Draw avatar
   //INSERT CODE
-  
+  avatar->draw(texid[0]);
+
   glutSwapBuffers();
 }
 
