@@ -3,7 +3,7 @@
 
 #define WIDTH 1000
 #define HEIGHT 600
-#define FRAME_RATE 50
+#define FRAME_RATE 10
 #define NUM_TEX 16
 #define NUM_ROOMS 16
 
@@ -27,6 +27,8 @@ bool loadTexture(int i, char const * path);
 VECTOR3D screenToWorld(void);
 VECTOR3D mouseWorld;
 VECTOR3D camera = VECTOR3D(0.0,6.0,22.0);
+VECTOR3D dir = VECTOR3D(1.0,0.0,0.0);
+VECTOR3D lookAt = VECTOR3D(0.0,0.0,0.0);
 
 GLfloat light_position0[] = {20.0,  16.0, 0.0,1.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};
@@ -45,7 +47,7 @@ RGBpixmap * tex[NUM_TEX];
 GLuint texid[NUM_TEX];
 
 float meshSize = 16.0;
-Robot *r = new Robot();
+Robot *avatar = new Robot();
 
 // bools for arrow keys
 bool key_up = false;

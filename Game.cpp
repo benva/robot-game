@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
   glutMotionFunc(mouseMotionHandler);
-  //  glutPassiveMotionFunc(mousePassiveHandler);
+  //glutPassiveMotionFunc(mousePassiveHandler);
   
   glutSpecialFunc(functionKeys);
   glutSpecialUpFunc(functionKeysUp);
@@ -168,7 +168,7 @@ void display(void) {
 
   //Draw the Enemy Robots
   //INSERT CODE
-  r->draw(2000);
+  avatar->draw(2000);
 
   //Draw avatar
   //INSERT CODE
@@ -189,17 +189,22 @@ void tick(int value) {
   // Call Evil robot move methods
 
   // Update Avatar position
-  r->move(key_up, key_down, key_left, key_right);
+  avatar->move(key_up, key_down, key_left, key_right);
   
-  camera = r->getPos();
+  camera = avatar->getPos();
+  dir = avatar->getDir();
+  lookAt = camera+dir;
 
   if(!above_view) {
-    camX = r->getX();
-    camY = r->getY();
-    camZ = r->getZ();
+    camX = avatar->getX();
+    camY = avatar->getY();
+    camZ = avatar->getZ();
+    
+    lookAtX = lookAt.GetX();
+    lookAtY = lookAt.GetY();
+    lookAtZ = lookAt.GetZ();
+    
   }
-
-  printf("%s", key_up == true? "UP":"");
 
   glutPostRedisplay();
   glutTimerFunc(FRAME_RATE, tick, 1);
@@ -246,10 +251,10 @@ void mousePassiveHandler(int xMouse, int yMouse) {
   mouse_y = yMouse;
   
   mouseWorld = screenToWorld();
-  /*  lookAtX=mouseWorld.GetX();
+  lookAtX=mouseWorld.GetX();
   lookAtY=mouseWorld.GetY();
   lookAtZ=mouseWorld.GetZ();
-  */
+  //  cout << lookAtX << endl;
 }
 
 void functionKeys(int key, int x, int y) {
