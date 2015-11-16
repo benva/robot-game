@@ -33,7 +33,7 @@ typedef struct TextureQuad {
 
 typedef struct DoorWall {
   QuadMesh* section[3];
-  QuadMesh * doorframe[4];
+  QuadMesh* doorframe[4];
   
   TextureQuad * tsection[3];
   TextureQuad * tdoorframe[4];

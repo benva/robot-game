@@ -4,8 +4,11 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <iostream>
 
 #include "VECTOR3D.h"
+#include "QuadMesh.h"
+#include "Room.hpp"
 #include "Robot.hpp"
 
 
@@ -95,6 +98,7 @@ void Robot::move(bool up, bool down, bool left, bool right) {
   
   dir.SetX(tx);
   dir.SetZ(tz);
+  
   
   if(up) {
     position.SetX(position.GetX() + tx);

@@ -11,11 +11,12 @@
 #include <utility>
 #include <vector>
 
-#include "VECTOR3D.h"
 #include "RGBpixmap.h"
+
+#include "VECTOR3D.h"
 #include "QuadMesh.h"
-#include "Robot.hpp"
 #include "Room.hpp"
+#include "Robot.hpp"
 
 #include "Game.hpp"
 

@@ -13,7 +13,8 @@ private:
   float angle;
   int health;
   VECTOR3D dir;
-
+  Room * current_room;
+  
 public:
   // Constructors
   Robot(float newX=1.0, float newY=2.0, float newZ=2.0) : angle(0.0), health(100) {
