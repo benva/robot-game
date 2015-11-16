@@ -212,9 +212,9 @@ void tick(int value) {
 
 //Updates camera coordinates
 void updateCamera() {
-      camZ = camR*sin(camTheta) * cos(camPhi);
-      camX = camR*sin(camTheta) * sin(camPhi);
-      camY = camR*cos(camTheta);
+  camZ = camR*sin(camTheta) * cos(camPhi) + avatar->getZ();
+  camX = camR*sin(camTheta) * sin(camPhi) + avatar->getX();
+  camY = camR*cos(camTheta);
 }
 
 float map(float value, float from, float to) {
@@ -235,6 +235,10 @@ void mouse(int button, int state, int x, int y) {
 void mouseMotionHandler(int xMouse, int yMouse)
 {
   above_view = true;
+  lookAtX = avatar->getX();
+  lookAtY = avatar->getY();
+  lookAtZ = avatar->getZ();
+
   glutSetCursor(GLUT_CURSOR_CROSSHAIR);
   camTheta = map(500-yMouse,500,90)+270;
   camPhi = map(xMouse,500,360);
