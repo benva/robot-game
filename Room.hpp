@@ -65,14 +65,15 @@ private:
   QuadMesh* floor;
   TextureQuad* tfloor;
 
-  GLuint * floor_texture;
-  GLuint * wall_texture;
+  GLuint floor_texture;
+  GLuint wall_texture;
+  GLuint door_texture;
 
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
-  void initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw);
-  void drawTexture(TextureQuad * quad, GLuint texid);
+  void initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth);
+  void drawTexture(TextureQuad * tq, GLuint texid, float mult);
   TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
 
 public:

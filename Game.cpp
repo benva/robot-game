@@ -60,11 +60,15 @@ int i;
   
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
+
   glShadeModel(GL_SMOOTH);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHT1);
-  
+  //  glEnable(GL_LIGHT1);
+
+  glEnable(GL_COLOR_MATERIAL);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
   // Other OpenGL setup
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
@@ -87,17 +91,18 @@ int i;
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
 
   for(i=0; i<NUM_TEX; i++) {
-    texid[i] = 2000+i;
-  }
+    texid[i] = 2000+i; 
+ }
   
-  cout << "tex[0] a: " << tex[0] << endl;
-  loadTexture(tex[0], "textures/Mandrill.bmp");
-  cout << "tex[0] b: " << tex[0] << endl;
-  
+  loadTexture(0, "textures/brick.bmp");
+  loadTexture(1, "textures/rock.bmp");
+
+
   i=-1;
   while(tex[++i] != NULL){
     setTexture(tex[i], texid[i]);
   }
+
   room[0] = new Room();
   room[0]->initRoom();
   room[1] = new Room(room[0],3);
@@ -109,20 +114,20 @@ int i;
  
 }
 
-bool loadTexture(RGBpixmap * tex, char path[]) {
-  cout << "tex a: " << tex << endl;
-  tex = new RGBpixmap;
-  cout << "tex b: " << tex << endl;
-  tex->readBMPFile(path);
+bool loadTexture(int i, char path[]) {
+
+  tex[i] = new RGBpixmap;
+  tex[i]->readBMPFile(path);
   return true;
 }
 
 void setTexture(RGBpixmap * tex, GLuint textureID) {
   glBindTexture(GL_TEXTURE_2D, textureID);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->nCols, tex->nRows, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixel);
-  cout << "WHAT"<<endl;
 }
 
 // function to display everything to the screen

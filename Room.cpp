@@ -13,19 +13,24 @@ using namespace std;
 
 void Room::draw() {
   int i,j;
-  TextureQuad * q;
-  drawTexture(q,2000);
+
+  drawTexture(tfloor, floor_texture,0.5);
 
   floor->DrawMesh(1.0);
 
   for(i=0;i<4;i++) {
     if(doorwall[i]->dd == -1){
-      doorwall[i]->section[0]->DrawMesh(1.0);
+      drawTexture(doorwall[i]->tsection[0], wall_texture,1);
+      //      doorwall[i]->section[0]->DrawMesh(1.0);
     } else {
-      for(j=0; j<3; j++) 
-	doorwall[i]->section[j]->DrawMesh(1.0);
-      for(j=0; j<4; j++)
-      doorwall[i]->doorframe[j]->DrawMesh(1.0);
+      for(j=0; j<3; j++) {
+	drawTexture(doorwall[i]->tsection[j], wall_texture,1);
+	//doorwall[i]->section[j]->DrawMesh(1.0);
+      }
+      for(j=0; j<4; j++) {
+	drawTexture(doorwall[i]->tdoorframe[j], door_texture,1);
+	//	doorwall[i]->doorframe[j]->DrawMesh(1.0);
+      }
     }
   }
 }
@@ -36,12 +41,15 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
   length = newLength;
   width = newWidth;
 
-
+  floor_texture = 2001;
+  wall_texture = 2000;
+  door_texture = 2000;
 
   // If this room is the head of the roomtree, set values accordingly
   if(neighbor[0] == NULL) {
     dir1v = VECTOR3D(1.0f, 0.0f, 0.0f);
     dir2v = VECTOR3D(0.0f, 0.0f, -1.0f);
+    //    origin = VECTOR3D(0.0f, 0.0f, 0.0f);
     origin = VECTOR3D(0.0f, 0.0f, 0.0f);
   }
   else {
@@ -84,7 +92,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
 
   floor = new QuadMesh(1.0,1.0);
   floor->InitMesh(1.0, origin, length, width, dir1v, dir2v);
-  
+  tfloor = makeTQ(origin,length,width,dir1v,dir2v);
 
   return true;
 }
@@ -131,13 +139,15 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
     for(i=0;i<3;i++) {
       dw->section[i] = new QuadMesh(1.0,1.0);
       dw->section[i]->InitMesh(1.0, dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
+      dw->tsection[i] = makeTQ(dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v, dw->dir2v);
     }
     // Create doorframe meshes
-    initDoorFrame(dw->doorframe, dw->dir1v, dw->dir2v, dw->origin[1], dw->dh, dw->dw);
+    initDoorFrame(dw, dw->dir1v, dw->dir2v, dw->origin[1], dw->dh, dw->dw);
     // If this is a doorless wall, create just the first quadmesh
   } else {
     dw->section[0] = new QuadMesh(1.0,1.0);
     dw->section[0]->InitMesh(1.0, dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
+    dw->tsection[0] = makeTQ(dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
   }    
 
   return true;
@@ -184,39 +194,61 @@ bool Room::addNeighbor(Room* newNeighbor, int wallid) {
 }
 
 // pass along dir1v and dir2v of the wall, origin of the top left (from inside) corner of door (ie origin of panel[1]) door height(dh) and doorwidth (dw) and write doorframe data to QuadMesh * doorframe array
-void Room::initDoorFrame(QuadMesh * doorframe[4], VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dw) {
+void Room::initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth) {
   int i;
   //  dir2v *= -1;
   dir2v = dir1v.CrossProduct(dir2v);
   for(i=0; i<4; i++) {
-    doorframe[i] = new QuadMesh(1.0,1.0);
-    doorframe[i]->InitMesh(1.0, origin, DOOR_FRAME/2, (i%2==0? dw : dh), dir2v, dir1v);
-    origin += dir1v*(i%2==0? dw : dh);
+    dw->doorframe[i] = new QuadMesh(1.0,1.0);
+    dw->doorframe[i]->InitMesh(1.0, origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
+    dw->tdoorframe[i] = makeTQ(origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
+    origin += dir1v*(i%2==0? dwidth : dh);
     dir1v = dir1v.CrossProduct(dir2v);
   }
 }
 
 // Draw Texture 
-void Room::drawTexture(TextureQuad * quad, GLuint texid) {
-  
+void Room::drawTexture(TextureQuad * tq, GLuint texid, float mult) {  
+  VECTOR3D origin = tq->origin;
+  float len=tq->length*mult;
+  float wid=tq->width*mult;
+
+  // MUST BE CHANGED BACK TO GL_MODULATE 
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   glPushMatrix();
   glBindTexture(GL_TEXTURE_2D, texid);
   glBegin(GL_QUADS);
+
   glTexCoord2f( 0.0, 0.0);
-  glVertex3f(-1.0f, 3.0f, -1.0f);
-  glTexCoord2f( 0.0, 1.0);
-  glVertex3f(-1.0f, 3.0f,  1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, 3.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, 3.0f, -1.0f);
+  glVertex3f(origin.GetX(),origin.GetY(),origin.GetZ());
+
+  origin += tq->dir2v*tq->width;
+  glTexCoord2f( 0.0, wid);
+  glVertex3f(origin.GetX(),origin.GetY(),origin.GetZ());
+
+  origin += tq->dir1v*tq->length;
+  glTexCoord2f( len, wid);
+  glVertex3f(origin.GetX(),origin.GetY(),origin.GetZ());
+
+  origin -= tq->dir2v*tq->width;
+  glTexCoord2f( len, 0.0);
+  glVertex3f(origin.GetX(),origin.GetY(),origin.GetZ());
+
   glEnd();
   glFlush();
   glPopMatrix();
 }
 
-TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v){
-  
+TextureQuad * Room::makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v){
+  TextureQuad *tq = (TextureQuad*) calloc (1, sizeof(TextureQuad));
+  tq->origin = origin;
+  tq->length = length;
+  tq->width = width;
+  tq->dir1v = dir1v;
+  tq->dir2v = dir2v;
+  return tq;
 }

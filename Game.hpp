@@ -17,13 +17,13 @@ void functionKeys(int key, int x, int y);
 void tick(int value);
 void keyUp (int, int, int);
 void setTexture(RGBpixmap *tex, GLuint textureID);
-bool loadTexture(RGBpixmap *tex, char path[]);
+bool loadTexture(int i, char path[]);
 
-GLfloat light_position0[] = {-6.0,  12.0, 0.0,1.0};
+GLfloat light_position0[] = {20.0,  16.0, 0.0,1.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};
 GLfloat light_diffuse[]   = {1.0, 1.0, 1.0, 1.0};
 GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};
-GLfloat light_ambient[]   = {0.2, 0.2, 0.2, 1.0};
+GLfloat light_ambient[]   = {0.0, 0.0, 0.0, 1.0};
 
 float camX=0.0, camY=6.0, camZ=22.0, camR=10.0,
   lookAtX=0.0, lookAtY=0.0, lookAtZ=0.0,
