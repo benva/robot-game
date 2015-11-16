@@ -7,6 +7,7 @@
 #include "RGBpixmap.h"
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
+#include "Robot.hpp"
 #include "Room.hpp"
 
 using namespace std;
@@ -252,4 +253,19 @@ TextureQuad * Room::makeTQ(VECTOR3D origin, float length, float width, VECTOR3D 
   tq->dir1v = dir1v;
   tq->dir2v = dir2v;
   return tq;
+}
+
+// Check if tx and tz displacement will cause rob to be in a wall
+bool Room::intersects(Robot * rob, float tx, float tz) {
+  // Get rob's bounding box
+
+  // Check if rob is within main room boundaries
+  // if yes, return false.
+
+  // else check if rob is within doorway on intersecting wall
+  // if yes check if rob is past doorframe into next room,
+  // if yes, update robs room pointer to next room
+  // and return false
+
+  return false;  
 }

@@ -1,4 +1,4 @@
-// robot.h
+// robot.hpp
 // Class declaration for a Robot
 
 #ifndef ROBOT_H
@@ -7,6 +7,7 @@
 #define ROT_INC 2.0
 #define MOV_INC 0.1
 
+class Room;
 class Robot {
 private:
   VECTOR3D position;
