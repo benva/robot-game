@@ -2,7 +2,7 @@
 #define GAME_H
 
 #define WIDTH 1000
-#define HEIGHT 800
+#define HEIGHT 600
 #define FRAME_RATE 50
 #define NUM_TEX 16
 #define NUM_ROOMS 16

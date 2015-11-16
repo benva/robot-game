@@ -64,7 +64,7 @@ int i;
   glShadeModel(GL_SMOOTH);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-  //  glEnable(GL_LIGHT1);
+  glEnable(GL_LIGHT1);
 
   glEnable(GL_COLOR_MATERIAL);
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
@@ -94,9 +94,14 @@ int i;
     texid[i] = 2000+i; 
  }
   
-  loadTexture(0, "textures/brick.bmp");
-  loadTexture(1, "textures/rock.bmp");
-
+  loadTexture(0, "textures/rock.bmp");
+  loadTexture(1, "textures/brick1.bmp");
+  loadTexture(2, "textures/brick2.bmp");
+  loadTexture(3, "textures/stone1.bmp");
+  loadTexture(4, "textures/stone2.bmp");
+  loadTexture(5, "textures/stone3.bmp");
+  loadTexture(6, "textures/wood.bmp");
+  
 
   i=-1;
   while(tex[++i] != NULL){
@@ -105,13 +110,18 @@ int i;
 
   room[0] = new Room();
   room[0]->initRoom();
+
   room[1] = new Room(room[0],3);
   room[1]->initRoom();
+  room[1]->setTextures(texid[5],texid[6]);
+
   room[2] = new Room(room[1],1);
   room[2]->initRoom();
+  room[2]->setTextures(texid[2],texid[3]);
+
   room[3] = new Room(room[1],3);
   room[3]->initRoom(6,6);
- 
+  room[3]->setTextures(texid[4],texid[0]);
 }
 
 bool loadTexture(int i, char path[]) {

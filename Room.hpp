@@ -79,10 +79,11 @@ private:
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall;}
   ~Room() {}
-  bool initRoom(float newLength=3.0, float newWidth=4.0, float newHeight=2.0); 
+  bool initRoom(float newLength=3.0, float newWidth=4.0, float newHeight=3.0); 
   void draw();
-  bool addDoor(int wallid, float dd=1.0, float dh=1.5, float dwidth=1.0);
+  bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.0);
   bool addNeighbor(Room* newNeighbor, int wallid);
+  void setTextures(GLuint wall, GLuint floor, GLuint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
 };
 
 #endif

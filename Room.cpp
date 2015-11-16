@@ -41,9 +41,9 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
   length = newLength;
   width = newWidth;
 
-  floor_texture = 2001;
-  wall_texture = 2000;
-  door_texture = 2000;
+  floor_texture = 2000;
+  wall_texture = 2001;
+  door_texture = 2001;
 
   // If this room is the head of the roomtree, set values accordingly
   if(neighbor[0] == NULL) {
@@ -215,6 +215,7 @@ void Room::drawTexture(TextureQuad * tq, GLuint texid, float mult) {
 
   // MUST BE CHANGED BACK TO GL_MODULATE 
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
