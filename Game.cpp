@@ -17,7 +17,12 @@
 #include "QuadMesh.h"
 
 #include "Room.hpp"
+
 #include "Robot.hpp"
+
+#include "Avatar.hpp"
+#include "EvilRobot.hpp"
+#include "Bullet.hpp"
 
 #include "Game.hpp"
 
@@ -35,6 +40,7 @@ int main(int argc, char **argv) {
 
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
+  glutKeyboardFunc(keyboard);
   glutMouseFunc(mouse);
   glutMotionFunc(mouseMotionHandler);
   //glutPassiveMotionFunc(mousePassiveHandler);
@@ -176,11 +182,11 @@ void display(void) {
 
   //Draw the Enemy Robots
   //INSERT CODE
-  avatar->draw(2000);
 
   //Draw avatar
   //INSERT CODE
-  
+  avatar->draw(texid[0]);
+
   glutSwapBuffers();
 }
 
@@ -284,6 +290,12 @@ void functionKeysUp(int key, int x, int y) {
   if(key == GLUT_KEY_DOWN) key_down = false;
   if(key == GLUT_KEY_RIGHT) key_right = false;
   if(key == GLUT_KEY_LEFT) key_left = false;
+}
+
+void keyboard(unsigned char key, int x, int y) {
+  if(key == ' ') {
+    // Make avatar shoot
+  }
 }
 
 VECTOR3D screenToWorld() {

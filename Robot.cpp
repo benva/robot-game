@@ -15,75 +15,79 @@
 using namespace std;
 
 void Robot::draw(GLuint texid) {
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  
-  glPushMatrix();
+  // Transform Robot before rendering its textures
 
+  glPushMatrix();
+  glTranslatef(this->getPos().GetX(), 0, this->getPos().GetZ());
+  glRotatef(this->getAngle(), 0, 1, 0);
+
+  // Render robot textures
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBindTexture(GL_TEXTURE_2D, texid);
   glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-1.0f, 1.0f, -1.0f);
-  glTexCoord2f( 0.0, 1.0);  
-  glVertex3f(-1.0f, 1.0f,  1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, 1.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, 1.0f, -1.0f);
+  glTexCoord2f(0.0, 1.0);  
+  glVertex3f(-1.0f, 1.0f, 1.0f);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(1.0f, 1.0f, 1.0f);
+  glTexCoord2f(1.0, 0.0);
+  glVertex3f(1.0f, 1.0f, -1.0f);
   glEnd();
 
   glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
-  glVertex3f( 1.0f, 1.0f, -1.0f);
-  glTexCoord2f( 0.0, 1.0);
-  glVertex3f( 1.0f, 1.0f,  1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, -1.0f, -1.0f);
+  glTexCoord2f(0.0, 0.0);
+  glVertex3f(1.0f, 1.0f, -1.0f);
+  glTexCoord2f(0.0, 1.0);
+  glVertex3f(1.0f, 1.0f, 1.0f);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(1.0f, -1.0f, 1.0f);
+  glTexCoord2f(1.0, 0.0);
+  glVertex3f(1.0f, -1.0f, -1.0f);
   glEnd();
 
   glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-1.0f, 1.0f, -1.0f);
   glTexCoord2f( 0.0, 1.0);
   glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(-1.0f, -1.0f, 1.0f);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(-1.0f, 1.0f, 1.0f);
   glEnd();
 
   glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f( 0.0, 1.0);
-  glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, -1.0f, -1.0f);
-  glEnd();
-
-  glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
-  glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f( 0.0, 1.0);
-  glVertex3f( -1.0f, 1.0f,  -1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, 1.0f,  -1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, -1.0f, -1.0f);
-  glEnd();
-
-  glBegin(GL_QUADS);
-  glTexCoord2f( 0.0, 0.0);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(-1.0f, -1.0f, 1.0f);
-  glTexCoord2f( 0.0, 1.0);
-  glVertex3f(-1.0f, 1.0f,  1.0f);
-  glTexCoord2f( 1.0, 1.0);
-  glVertex3f( 1.0f, 1.0f,  1.0f);
-  glTexCoord2f( 1.0, 0.0);
-  glVertex3f( 1.0f, -1.0f, 1.0f);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(1.0f, -1.0f, 1.0f);
+  glTexCoord2f(1.0, 0.0);
+  glVertex3f(1.0f, -1.0f, -1.0f);
+  glEnd();
+
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0, 0.0);
+  glVertex3f(-1.0f, -1.0f, -1.0f);
+  glTexCoord2f(0.0, 1.0);
+  glVertex3f(-1.0f, 1.0f, -1.0f);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(1.0f, 1.0f, -1.0f);
+  glTexCoord2f(1.0, 0.0);
+  glVertex3f(1.0f, -1.0f, -1.0f);
+  glEnd();
+
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0, 0.0);
+  glVertex3f(-1.0f, -1.0f, 1.0f);
+  glTexCoord2f(0.0, 1.0);
+  glVertex3f(-1.0f, 1.0f, 1.0f);
+  glTexCoord2f(1.0, 1.0);
+  glVertex3f(1.0f, 1.0f, 1.0f);
+  glTexCoord2f(1.0, 0.0);
+  glVertex3f(1.0f, -1.0f, 1.0f);
   glEnd();
 
   glPopMatrix();
