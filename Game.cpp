@@ -137,6 +137,9 @@ int i;
   room[3]->initRoom(6,6);
   room[3]->setTextures(texid[4],texid[0]);
 
+  /*  room[4] = new Room(room[3],3);
+  room[4]->initRoom(8,10);
+  */
 avatar = new Robot();
 avatar->initRobot(room[0]);
 }

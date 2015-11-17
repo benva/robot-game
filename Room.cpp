@@ -17,20 +17,20 @@ void Room::draw() {
 
   drawTexture(tfloor, floor_texture,0.5,0.5);
 
-  floor->DrawMesh(1.0);
+  floor->DrawMesh(MESH_SIZE);
 
   for(i=0;i<4;i++) {
     if(doorwall[i]->dd == -1){
       drawTexture(doorwall[i]->tsection[0], wall_texture,1,1);
-      //      doorwall[i]->section[0]->DrawMesh(1.0);
+      doorwall[i]->section[0]->DrawMesh(MESH_SIZE);
     } else {
       for(j=0; j<3; j++) {
 	drawTexture(doorwall[i]->tsection[j], wall_texture,1,1);
-	//doorwall[i]->section[j]->DrawMesh(1.0);
+	doorwall[i]->section[j]->DrawMesh(MESH_SIZE);
       }
       for(j=0; j<4; j++) {
 	drawTexture(doorwall[i]->tdoorframe[j], door_texture,1,1);
-	//	doorwall[i]->doorframe[j]->DrawMesh(1.0);
+	doorwall[i]->doorframe[j]->DrawMesh(MESH_SIZE);
       }
     }
   }
@@ -92,7 +92,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
   }
 
   floor = new QuadMesh(1.0,1.0);
-  floor->InitMesh(1.0, origin, length, width, dir1v, dir2v);
+  floor->InitMesh(MESH_SIZE, origin, length, width, dir1v, dir2v);
   tfloor = makeTQ(origin,width,length,dir2v,dir1v);
 
   return true;
@@ -139,7 +139,7 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
   if(dd != -1) {
     for(i=0;i<3;i++) {
       dw->section[i] = new QuadMesh(1.0,1.0);
-      dw->section[i]->InitMesh(1.0, dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
+      dw->section[i]->InitMesh(MESH_SIZE, dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
       dw->tsection[i] = makeTQ(dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v, dw->dir2v);
     }
     // Create doorframe meshes
@@ -147,7 +147,7 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
     // If this is a doorless wall, create just the first quadmesh
   } else {
     dw->section[0] = new QuadMesh(1.0,1.0);
-    dw->section[0]->InitMesh(1.0, dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
+    dw->section[0]->InitMesh(MESH_SIZE, dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
     dw->tsection[0] = makeTQ(dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
   }    
 
@@ -201,7 +201,7 @@ void Room::initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D
   dir2v = dir1v.CrossProduct(dir2v);
   for(i=0; i<4; i++) {
     dw->doorframe[i] = new QuadMesh(1.0,1.0);
-    dw->doorframe[i]->InitMesh(1.0, origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
+    dw->doorframe[i]->InitMesh(MESH_SIZE, origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
     dw->tdoorframe[i] = makeTQ(origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
     origin += dir1v*(i%2==0? dwidth : dh);
     dir1v = dir1v.CrossProduct(dir2v);
