@@ -125,7 +125,7 @@ int i;
   room[0] = new Room();
   room[0]->initRoom();
 
-  room[1] = new Room(room[0],3);
+  room[1] = new Room(room[0],1);
   room[1]->initRoom();
   room[1]->setTextures(texid[5],texid[6]);
 
@@ -268,7 +268,7 @@ void mousePassiveHandler(int xMouse, int yMouse) {
 void functionKeys(int key, int x, int y) {
   if(key == GLUT_KEY_F1) {
     above_view == true? above_view = false: above_view = true;
-    mouseMotionHandler(500,300);
+    camX = 0.0; camY = 6.0; camZ = 10.0;
   }
   if(key == GLUT_KEY_UP) key_up = true;
   if(key == GLUT_KEY_DOWN) key_down = true;

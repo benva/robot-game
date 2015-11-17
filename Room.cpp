@@ -256,16 +256,16 @@ TextureQuad * Room::makeTQ(VECTOR3D origin, float length, float width, VECTOR3D 
 }
 
 // Helper function for intersects
-bool withinRoom(VECTOR3D * minBB, VECTOR3D * maxBB, VECTOR3D * minRoom, VECTOR3D * maxRoom) {
-  if(minBB->GetX() < minRoom->GetX()) return false;
+int withinRoom(VECTOR3D * minBB, VECTOR3D * maxBB, VECTOR3D * minRoom, VECTOR3D * maxRoom) {
+  if(minBB->GetX() < minRoom->GetX()) return 3;
   //  if(minBB->GetY() < minRoom->GetY()) return false;
-  if(minBB->GetZ() < minRoom->GetZ()) return false;
+  if(minBB->GetZ() < minRoom->GetZ()) return 2;
 
-  if(maxBB->GetX() > maxRoom->GetX()) return false;
+  if(maxBB->GetX() > maxRoom->GetX()) return 1;
   //  if(maxBB->GetY() > maxRoom->GetY()) return false;
-  if(maxBB->GetZ() > maxRoom->GetZ()) return false;
+  if(maxBB->GetZ() > maxRoom->GetZ()) return 0;
 
-  return true;
+  return -1;
 }
 
 // Move coordinates of minBB and maxBB by tx and tz
@@ -277,27 +277,84 @@ void moveBB(VECTOR3D * minBB, VECTOR3D * maxBB, float tx, float tz) {
   maxBB->SetZ(maxBB->GetZ() + tz);
 }
 
+bool Room::within_doorway(int wall_dir, int wall_id, VECTOR3D * minBB, VECTOR3D * maxBB){
+  float dd = doorwall[wall_id]->dd;
+  float dw = doorwall[wall_id]->dw;
+  VECTOR3D origin1 = doorwall[wall_id]->origin[0];
+  VECTOR3D origin2;
+  VECTOR3D dir1v = doorwall[wall_id]->dir1v;
+
+  origin1 += dir1v*(dd-dw/2);
+  origin2 = origin1 + dir1v*dw;
+
+  if(wall_dir == 0) {
+    if(minBB->GetX() < origin1.GetX()) return false;
+    if(maxBB->GetX() > origin2.GetX()) return false;
+  }
+  if(wall_dir == 1) {
+    if(minBB->GetZ() > origin1.GetZ()) return false;
+    if(maxBB->GetZ() < origin2.GetZ()) return false;
+  }
+  if(wall_dir == 2) {
+    if(minBB->GetX() > origin1.GetX()) return false;
+    if(maxBB->GetX() < origin2.GetX()) return false;
+  }
+  if(wall_dir == 3) {
+    if(minBB->GetZ() < origin1.GetZ()) return false;
+    if(maxBB->GetZ() > origin2.GetZ()) return false;
+  }
+
+  return true;
+}
+bool into_next_room(VECTOR3D pos, VECTOR3D * minRoom, VECTOR3D * maxRoom, int w) {
+  if(w == 0)
+    if(pos.GetZ() >= (maxRoom->GetZ() + DOOR_FRAME)) return true;
+  if(w == 2)
+    if(pos.GetZ() <= (minRoom->GetZ() - DOOR_FRAME)) return true;
+  if(w == 1)
+    if(pos.GetX() >= (maxRoom->GetX() + DOOR_FRAME)) return true;
+  if(w == 3)
+    if(pos.GetX() <= (minRoom->GetX() - DOOR_FRAME)) return true;
+
+  return false;
+}
+
 // Check if tx and tz displacement will cause rob to be in a wall
 bool Room::intersects(Robot * rob, float tx, float tz) {
   VECTOR3D minBB, maxBB;
   VECTOR3D minRoom, maxRoom;
+  int wall_id;
+  int wall_dir;
+
   // Get rob's and room's bounding box
   rob->getBB(&minBB, &maxBB);
   moveBB(&minBB,&maxBB, tx, tz);
-  getRoomBB(&minRoom, &maxRoom);
-
-  cout << "MinRoom: " << minRoom.GetX() << " " << minRoom.GetY() << " " << minRoom.GetZ() << endl;
-  cout << "MaxRoom: " << maxRoom.GetX() << " " << maxRoom.GetY() << " " << maxRoom.GetZ() << endl<<endl;
-  cout << "MinBB: " << minBB.GetX() << " " << minBB.GetY() << " " << minBB.GetZ() << endl;
-  cout << "MaxBB: " << maxBB.GetX() << " " << maxBB.GetY() << " " << maxBB.GetZ() << endl<<endl;
+  wall_id = getRoomBB(&minRoom, &maxRoom);
 
   // Check if rob is within main room boundaries
   // if yes, return false.
-  if (withinRoom(&minBB,&maxBB,&minRoom,&maxRoom)) return false;
-  // else check if rob is within doorway on intersecting wall
-  // if yes check if rob is past doorframe into next room,
-  // if yes, update robs room pointer to next room
-  // and return false
+  wall_dir = withinRoom(&minBB,&maxBB,&minRoom,&maxRoom);
+  if (wall_dir==-1) return false;
+  
+  // Calculate wall_id rob is running into
+  wall_id = (wall_id + wall_dir)%4;  
+
+  cout << wall_id << " " << neighbor[wall_id] << endl;
+
+  // if the wall doesn't have a door, return true
+  if(neighbor[wall_id] == NULL) return true;
+  // else wall has a door, check if it's within the doorway
+  else {
+    if(within_doorway(wall_dir, wall_id, &minBB, &maxBB)) {
+      // if yes check if rob is past doorframe into next room,
+      if(into_next_room(rob->getPos(), &minRoom, &maxRoom, wall_dir)) {
+	// if yes, update robs room pointer to next room
+	rob->setCurrentRoom(neighbor[wall_id]);
+	return false;
+      }
+      return false;
+    }
+  }
 
   // change to return true later
   return true;  
@@ -312,18 +369,31 @@ VECTOR3D Room::getCenter(void) {
   return center;
 }
 
-void Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
-  if(dir1v.GetX() == 1){ // GUD
+// Returns wall at Max z position
+int Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
+  if(dir1v.GetX() == 1){
     *minRoom = origin + dir2v*width;
     *maxRoom = origin + dir1v*length;
+    return 0;
   } else if(dir1v.GetX() == -1) {
     *minRoom = origin + dir1v*length;
     *maxRoom = origin + dir2v*width;
-  } else if(dir2v.GetX() == 1) { //GUD
+    return 2;
+  } else if(dir2v.GetX() == 1) {
     *minRoom = origin;
     *maxRoom = origin + dir1v*length + dir2v*width;
+    return 1;
   } else {
     *minRoom = origin + dir1v*length + dir2v*width;
     *maxRoom = origin;
+    return 3;
   }
 }
+
+
+  /*  cout << "MinRoom: " << minRoom.GetX() << " " << minRoom.GetY() << " " << minRoom.GetZ() << endl;
+  cout << "MaxRoom: " << maxRoom.GetX() << " " << maxRoom.GetY() << " " << maxRoom.GetZ() << endl<<endl;
+  cout << "MinBB: " << minBB.GetX() << " " << minBB.GetY() << " " << minBB.GetZ() << endl;
+  cout << "MaxBB: " << maxBB.GetX() << " " << maxBB.GetY() << " " << maxBB.GetZ() << endl<<endl;
+  */
+  

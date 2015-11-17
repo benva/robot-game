@@ -29,7 +29,7 @@ public:
 
   ~Robot(){}  
   void initRobot(Room * room);
-
+  
   void draw(GLuint texid);
 
   void move(bool up, bool down, bool left, bool right);
@@ -55,7 +55,8 @@ public:
   float getAngle(void) {return angle;}
   int getHealth(void) {return health; }
 
-  
+  Room * getCurrentRoom() { return current_room; }
+  void setCurrentRoom(Room * room) { current_room = room; }
 };
 
 #endif

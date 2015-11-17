@@ -100,6 +100,7 @@ void Robot::move(bool up, bool down, bool left, bool right) {
   if(left) this->angle += ROT_INC;
   else if(right) this->angle -= ROT_INC;
   
+  //  cout << current_room << endl;
   // fetch angle in rads and calculate x and z move components
   angle = (this->angle * M_PI)/180;
   tx = MOV_INC * sin(angle);
@@ -115,10 +116,10 @@ void Robot::move(bool up, bool down, bool left, bool right) {
   }
   // If displacements won't cause wall intersection, update position
   if(up || down)
-  if(!current_room->intersects(this, tx, tz)) {
-    position.SetX(position.GetX() + tx);
-    position.SetZ(position.GetZ() + tz);
-  }
+    if(!current_room->intersects(this, tx, tz)) {
+      position.SetX(position.GetX() + tx);
+      position.SetZ(position.GetZ() + tz);
+    }
 
 }
 
