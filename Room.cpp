@@ -4,6 +4,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include "Object.hpp"
 #include "RGBpixmap.h"
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
@@ -319,24 +320,24 @@ bool into_next_room(VECTOR3D pos, VECTOR3D * minRoom, VECTOR3D * maxRoom, int w)
   return false;
 }
 
-// Check if tx and tz displacement will cause rob to be in a wall
-bool Room::intersects(Robot * rob, float tx, float tz) {
+// Check if tx and tz displacement will cause o to be in a wall
+bool Room::intersects(Object * o, float tx, float tz) {
   VECTOR3D minBB, maxBB;
   VECTOR3D minRoom, maxRoom;
   int wall_id;
   int wall_dir;
 
-  // Get rob's and room's bounding box
-  rob->getBB(&minBB, &maxBB);
+  // Get o's and room's bounding box
+  o->getBB(&minBB, &maxBB);
   moveBB(&minBB,&maxBB, tx, tz);
   wall_id = getRoomBB(&minRoom, &maxRoom);
 
-  // Check if rob is within main room boundaries
+  // Check if o is within main room boundaries
   // if yes, return false.
   wall_dir = withinRoom(&minBB,&maxBB,&minRoom,&maxRoom);
   if (wall_dir==-1) return false;
   
-  // Calculate wall_id rob is running into
+  // Calculate wall_id o is running into
   wall_id = (wall_id + wall_dir)%4;  
 
   cout << wall_id << " " << neighbor[wall_id] << endl;
@@ -346,10 +347,10 @@ bool Room::intersects(Robot * rob, float tx, float tz) {
   // else wall has a door, check if it's within the doorway
   else {
     if(within_doorway(wall_dir, wall_id, &minBB, &maxBB)) {
-      // if yes check if rob is past doorframe into next room,
-      if(into_next_room(rob->getPos(), &minRoom, &maxRoom, wall_dir)) {
-	// if yes, update robs room pointer to next room
-	rob->setCurrentRoom(neighbor[wall_id]);
+      // if yes check if o is past doorframe into next room,
+      if(into_next_room(o->getPos(), &minRoom, &maxRoom, wall_dir)) {
+	// if yes, update os room pointer to next room
+	o->setCurrentRoom(neighbor[wall_id]);
 	return false;
       }
       return false;

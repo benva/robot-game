@@ -91,7 +91,7 @@ void Robot::draw(GLuint texid) {
   glEnd();
 
   glPopMatrix();
-  drawBB();
+  this->drawBB();
 }
 
 void Robot::initRobot(Room * room) {
@@ -128,21 +128,3 @@ void Robot::move(bool up, bool down, bool left, bool right) {
 
 }
 
-// verrrry simple BB implementation
-void Robot::getBB(VECTOR3D * minBB, VECTOR3D * maxBB) {
-  *minBB = this->minBB + position;
-  *maxBB = this->maxBB + position;
-}
-
-void Robot::drawBB(void) {
-  VECTOR3D min,max;
-  getBB(&min,&max);
-  //  cout << "Min: " << min.GetX() << " " << min.GetY() << " " << min.GetZ() << endl;
-  //  cout << "Max: " << max.GetX() << " " << max.GetY() << " " << max.GetZ() << endl<<endl;
-  
-  glPushMatrix();
-  glTranslatef(position.GetX(),1.0,position.GetZ());
-  glScalef(1.0,4.0,1.0);
-  glutWireCube(0.5);
-  glPopMatrix();
-}
