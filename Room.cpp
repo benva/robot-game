@@ -255,17 +255,75 @@ TextureQuad * Room::makeTQ(VECTOR3D origin, float length, float width, VECTOR3D 
   return tq;
 }
 
+// Helper function for intersects
+bool withinRoom(VECTOR3D * minBB, VECTOR3D * maxBB, VECTOR3D * minRoom, VECTOR3D * maxRoom) {
+  if(minBB->GetX() < minRoom->GetX()) return false;
+  //  if(minBB->GetY() < minRoom->GetY()) return false;
+  if(minBB->GetZ() < minRoom->GetZ()) return false;
+
+  if(maxBB->GetX() > maxRoom->GetX()) return false;
+  //  if(maxBB->GetY() > maxRoom->GetY()) return false;
+  if(maxBB->GetZ() > maxRoom->GetZ()) return false;
+
+  return true;
+}
+
+// Move coordinates of minBB and maxBB by tx and tz
+void moveBB(VECTOR3D * minBB, VECTOR3D * maxBB, float tx, float tz) {
+  minBB->SetX(minBB->GetX() + tx);
+  minBB->SetZ(minBB->GetZ() + tz);
+
+  maxBB->SetX(maxBB->GetX() + tx);
+  maxBB->SetZ(maxBB->GetZ() + tz);
+}
+
 // Check if tx and tz displacement will cause rob to be in a wall
 bool Room::intersects(Robot * rob, float tx, float tz) {
-  // Get rob's bounding box
+  VECTOR3D minBB, maxBB;
+  VECTOR3D minRoom, maxRoom;
+  // Get rob's and room's bounding box
+  rob->getBB(&minBB, &maxBB);
+  moveBB(&minBB,&maxBB, tx, tz);
+  getRoomBB(&minRoom, &maxRoom);
+
+  cout << "MinRoom: " << minRoom.GetX() << " " << minRoom.GetY() << " " << minRoom.GetZ() << endl;
+  cout << "MaxRoom: " << maxRoom.GetX() << " " << maxRoom.GetY() << " " << maxRoom.GetZ() << endl<<endl;
+  cout << "MinBB: " << minBB.GetX() << " " << minBB.GetY() << " " << minBB.GetZ() << endl;
+  cout << "MaxBB: " << maxBB.GetX() << " " << maxBB.GetY() << " " << maxBB.GetZ() << endl<<endl;
 
   // Check if rob is within main room boundaries
   // if yes, return false.
-
+  if (withinRoom(&minBB,&maxBB,&minRoom,&maxRoom)) return false;
   // else check if rob is within doorway on intersecting wall
   // if yes check if rob is past doorframe into next room,
   // if yes, update robs room pointer to next room
   // and return false
 
-  return false;  
+  // change to return true later
+  return true;  
+}
+
+
+VECTOR3D Room::getCenter(void) {
+  VECTOR3D center;
+  center = origin;
+  center += dir1v*(length/2);
+  center += dir2v*(width/2);
+  return center;
+}
+
+void Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
+  if(dir1v.GetX() == 1){ // GUD
+    *minRoom = origin + dir2v*width;
+    *maxRoom = origin + dir1v*length;
+  } else if(dir1v.GetX() == -1) {
+    *minRoom = origin + dir1v*length;
+    *maxRoom = origin + dir2v*width;
+  } else if(dir2v.GetX() == 1) { //GUD
+    *minRoom = origin;
+    *maxRoom = origin + dir1v*length + dir2v*width;
+  } else {
+    *minRoom = origin + dir1v*length + dir2v*width;
+    *maxRoom = origin;
+  }
 }

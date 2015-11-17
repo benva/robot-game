@@ -76,6 +76,7 @@ private:
   void initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth);
   void drawTexture(TextureQuad * tq, GLuint texid, float mult1, float mult2);
   TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
+  void getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom);
 
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall;}
@@ -86,6 +87,7 @@ public:
   bool addNeighbor(Room* newNeighbor, int wallid);
   void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
   bool intersects(Robot * rob, float tx, float tz);
+  VECTOR3D getCenter(void);
 };
 
 #endif

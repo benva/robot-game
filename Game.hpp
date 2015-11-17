@@ -47,7 +47,7 @@ RGBpixmap * tex[NUM_TEX];
 GLuint texid[NUM_TEX];
 
 float meshSize = 16.0;
-Robot *avatar = new Robot();
+Robot *avatar;
 
 // bools for arrow keys
 bool key_up = false;

@@ -136,6 +136,9 @@ int i;
   room[3] = new Room(room[1],3);
   room[3]->initRoom(6,6);
   room[3]->setTextures(texid[4],texid[0]);
+
+avatar = new Robot();
+avatar->initRobot(room[0]);
 }
 
 bool loadTexture(int i, char const * path) {
@@ -228,7 +231,7 @@ float map(float value, float from, float to) {
 void mouse(int button, int state, int x, int y) {
   if(state == GLUT_UP)
     if(button == GLUT_LEFT_BUTTON) {
-      above_view=false;
+      //      above_view=false;
       glutSetCursor(GLUT_CURSOR_NONE);
     }
 }
@@ -236,7 +239,6 @@ void mouse(int button, int state, int x, int y) {
 // Mouse motion callback - use only if you want to 
 void mouseMotionHandler(int xMouse, int yMouse)
 {
-  above_view = true;
   lookAtX = avatar->getX();
   lookAtY = avatar->getY();
   lookAtZ = avatar->getZ();
@@ -264,6 +266,10 @@ void mousePassiveHandler(int xMouse, int yMouse) {
 }
 
 void functionKeys(int key, int x, int y) {
+  if(key == GLUT_KEY_F1) {
+    above_view == true? above_view = false: above_view = true;
+    mouseMotionHandler(500,300);
+  }
   if(key == GLUT_KEY_UP) key_up = true;
   if(key == GLUT_KEY_DOWN) key_down = true;
   if(key == GLUT_KEY_RIGHT) key_right = true;

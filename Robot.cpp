@@ -11,6 +11,7 @@
 #include "Room.hpp"
 #include "Robot.hpp"
 
+using namespace std;
 
 void Robot::draw(GLuint texid) {
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -85,6 +86,13 @@ void Robot::draw(GLuint texid) {
   glEnd();
 
   glPopMatrix();
+  drawBB();
+}
+
+void Robot::initRobot(Room * room) {
+    this->current_room = room;
+    position = current_room->getCenter();
+    position.SetY(position.GetY() + 2.0);
 }
 
 void Robot::move(bool up, bool down, bool left, bool right) {
@@ -100,18 +108,35 @@ void Robot::move(bool up, bool down, bool left, bool right) {
   // Set direction vector to tx and tz components
   dir.SetX(tx);
   dir.SetZ(tz);
-  
-  // If displacements won't cause wall intersection, update position
-  if(up) {
-      if(!current_room->intersects(this, tx, tz)) {
-	position.SetX(position.GetX() + tx);
-	position.SetZ(position.GetZ() + tz);
-      }
+
+  if(down){
+    tx *= -1;
+    tz *= -1;
   }
-  else if(down) {
-    if(!current_room->intersects(this, -tx, -tz)) {
-      position.SetX(position.GetX() - tx);
-      position.SetZ(position.GetZ() - tz);
-    }
-  }  
+  // If displacements won't cause wall intersection, update position
+  if(up || down)
+  if(!current_room->intersects(this, tx, tz)) {
+    position.SetX(position.GetX() + tx);
+    position.SetZ(position.GetZ() + tz);
+  }
+
+}
+
+// verrrry simple BB implementation
+void Robot::getBB(VECTOR3D * minBB, VECTOR3D * maxBB) {
+  *minBB = this->minBB + position;
+  *maxBB = this->maxBB + position;
+}
+
+void Robot::drawBB(void) {
+  VECTOR3D min,max;
+  getBB(&min,&max);
+  //  cout << "Min: " << min.GetX() << " " << min.GetY() << " " << min.GetZ() << endl;
+  //  cout << "Max: " << max.GetX() << " " << max.GetY() << " " << max.GetZ() << endl<<endl;
+  
+  glPushMatrix();
+  glTranslatef(position.GetX(),1.0,position.GetZ());
+  glScalef(1.0,4.0,1.0);
+  glutWireCube(0.5);
+  glPopMatrix();
 }
