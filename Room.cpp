@@ -17,20 +17,20 @@ void Room::draw() {
 
   drawTexture(tfloor, floor_texture,0.5,0.5);
 
-  floor->DrawMesh(MESH_SIZE);
+  //floor->DrawMesh(MAX_MESH_SIZE);
 
   for(i=0;i<4;i++) {
     if(doorwall[i]->dd == -1){
       drawTexture(doorwall[i]->tsection[0], wall_texture,1,1);
-      doorwall[i]->section[0]->DrawMesh(MESH_SIZE);
+      doorwall[i]->section[0]->DrawMesh(MAX_MESH_SIZE);
     } else {
       for(j=0; j<3; j++) {
 	drawTexture(doorwall[i]->tsection[j], wall_texture,1,1);
-	doorwall[i]->section[j]->DrawMesh(MESH_SIZE);
+	doorwall[i]->section[j]->DrawMesh(MAX_MESH_SIZE);
       }
       for(j=0; j<4; j++) {
 	drawTexture(doorwall[i]->tdoorframe[j], door_texture,1,1);
-	doorwall[i]->doorframe[j]->DrawMesh(MESH_SIZE);
+	doorwall[i]->doorframe[j]->DrawMesh(MAX_MESH_SIZE);
       }
     }
   }
@@ -59,7 +59,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     dir2v = neighbor[0]->dir2v;
 
     // fetch origin from parent and calc adjusted one based on wall of parent
-    origin = calcNewOrigin((parent_wall+1)%4, neighbor[0]->origin);
+    origin = calcNewOrigin((parent_wall+1)%4, neighbor[0]->origin, neighbor[0]);
     // fix parent vectors AFTER origin has been calculated
     fixParentVectors(&dir1v,&dir2v,parent_wall);
     origin += dir2v*DOOR_FRAME;
@@ -91,7 +91,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     }
   }
 
-  floor = new QuadMesh(1.0,1.0);
+  floor = new QuadMesh(MAX_MESH_SIZE);
   floor->InitMesh(MESH_SIZE, origin, length, width, dir1v, dir2v);
   tfloor = makeTQ(origin,width,length,dir2v,dir1v);
 
@@ -138,7 +138,7 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
   // If this wall is supposed to have a door, create 3 new quadmeshes based on dimensions
   if(dd != -1) {
     for(i=0;i<3;i++) {
-      dw->section[i] = new QuadMesh(1.0,1.0);
+      dw->section[i] = new QuadMesh(MAX_MESH_SIZE);
       dw->section[i]->InitMesh(MESH_SIZE, dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v,dw->dir2v);
       dw->tsection[i] = makeTQ(dw->origin[i], dw->len[i], dw->hgt[i], dw->dir1v, dw->dir2v);
     }
@@ -146,7 +146,7 @@ bool Room::addDoor(int wallid, float dd, float dh, float dwidth) {
     initDoorFrame(dw, dw->dir1v, dw->dir2v, dw->origin[1], dw->dh, dw->dw);
     // If this is a doorless wall, create just the first quadmesh
   } else {
-    dw->section[0] = new QuadMesh(1.0,1.0);
+    dw->section[0] = new QuadMesh(MAX_MESH_SIZE);
     dw->section[0]->InitMesh(MESH_SIZE, dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
     dw->tsection[0] = makeTQ(dw->origin[0], dw->length, height, dw->dir1v,dw->dir2v);
   }    
@@ -159,6 +159,14 @@ VECTOR3D Room::calcNewOrigin(int wallid, VECTOR3D origin) {
   if(wallid == 1) return origin + (dir1v*length);
   if(wallid == 2) return origin + (dir1v*length) + (dir2v*width);
   if(wallid == 3) return origin + (dir2v*width);
+  return origin;
+}
+
+// returns origin of each corner based on the wall id
+VECTOR3D Room::calcNewOrigin(int wallid, VECTOR3D origin, Room * parent) {
+  if(wallid == 1) return origin + (dir1v*parent->length);
+  if(wallid == 2) return origin + (dir1v*parent->length) + (dir2v*parent->width);
+  if(wallid == 3) return origin + (dir2v*parent->width);
   return origin;
 }
 
@@ -200,7 +208,7 @@ void Room::initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D
   //  dir2v *= -1;
   dir2v = dir1v.CrossProduct(dir2v);
   for(i=0; i<4; i++) {
-    dw->doorframe[i] = new QuadMesh(1.0,1.0);
+    dw->doorframe[i] = new QuadMesh(MAX_MESH_SIZE);
     dw->doorframe[i]->InitMesh(MESH_SIZE, origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
     dw->tdoorframe[i] = makeTQ(origin, DOOR_FRAME/2, (i%2==0? dwidth : dh), dir2v, dir1v);
     origin += dir1v*(i%2==0? dwidth : dh);
@@ -308,13 +316,13 @@ bool Room::within_doorway(int wall_dir, int wall_id, VECTOR3D * minBB, VECTOR3D 
 }
 bool into_next_room(VECTOR3D pos, VECTOR3D * minRoom, VECTOR3D * maxRoom, int w) {
   if(w == 0)
-    if(pos.GetZ() >= (maxRoom->GetZ() + DOOR_FRAME)) return true;
+    if(pos.GetZ() >= (maxRoom->GetZ() + DOOR_FRAME*2)) return true;
   if(w == 2)
-    if(pos.GetZ() <= (minRoom->GetZ() - DOOR_FRAME)) return true;
+    if(pos.GetZ() <= (minRoom->GetZ() - DOOR_FRAME*2)) return true;
   if(w == 1)
-    if(pos.GetX() >= (maxRoom->GetX() + DOOR_FRAME)) return true;
+    if(pos.GetX() >= (maxRoom->GetX() + DOOR_FRAME*2)) return true;
   if(w == 3)
-    if(pos.GetX() <= (minRoom->GetX() - DOOR_FRAME)) return true;
+    if(pos.GetX() <= (minRoom->GetX() - DOOR_FRAME*2)) return true;
 
   return false;
 }

@@ -29,8 +29,9 @@ VECTOR3D mouseWorld;
 VECTOR3D camera = VECTOR3D(0.0,6.0,22.0);
 VECTOR3D dir = VECTOR3D(1.0,0.0,0.0);
 VECTOR3D lookAt = VECTOR3D(0.0,0.0,0.0);
+VECTOR3D room_center;
 
-GLfloat light_position0[] = {20.0,  16.0, 0.0,1.0};
+GLfloat light_position0[] = {3.0,  12.0, 3.0,1.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};
 GLfloat light_diffuse[]   = {1.0, 1.0, 1.0, 1.0};
 GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};

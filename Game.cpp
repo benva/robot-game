@@ -63,10 +63,14 @@ int i;
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  glEnable(GL_COLOR_MATERIAL);
+
     // Set up and enable lighting
   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
   glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
   glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
@@ -77,10 +81,10 @@ int i;
   glShadeModel(GL_SMOOTH);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHT1);
+  //  glEnable(GL_LIGHT1);
 
-  glEnable(GL_COLOR_MATERIAL);
-  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  //  glEnable(GL_NORMALIZE);
+
 
   // Other OpenGL setup
   glEnable(GL_DEPTH_TEST);
@@ -132,7 +136,7 @@ int i;
   room[0]->initRoom();
 
   room[1] = new Room(room[0],1);
-  room[1]->initRoom();
+  room[1]->initRoom(5,10);
   room[1]->setTextures(texid[5],texid[6]);
 
   room[2] = new Room(room[1],1);
@@ -143,9 +147,9 @@ int i;
   room[3]->initRoom(6,6);
   room[3]->setTextures(texid[4],texid[0]);
 
-  /*  room[4] = new Room(room[3],3);
+  room[4] = new Room(room[3],3);
   room[4]->initRoom(8,10);
-  */
+  
 avatar = new Robot();
 avatar->initRobot(room[0]);
 }
@@ -219,7 +223,10 @@ void tick(int value) {
     lookAtZ = lookAt.GetZ();
     
   }
-
+  room_center = avatar->getCurrentRoom()->getCenter();
+  light_position0[0] = room_center.GetX();
+  light_position0[2] = room_center.GetZ();
+  
   glutPostRedisplay();
   glutTimerFunc(FRAME_RATE, tick, 1);
 }

@@ -21,7 +21,8 @@ hgt |  |  |dh   |
 
 */
 
-#define MESH_SIZE 1.0
+#define MESH_SIZE 16
+#define MAX_MESH_SIZE 16
 #define DOOR_FRAME 0.5
 
 class Robot;
@@ -72,6 +73,7 @@ private:
   GLuint door_texture;
 
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
+  VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin, Room * parent);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
   void fixParentVectors(VECTOR3D * dir1v, VECTOR3D * dir2v, int pwall);
   void initDoorFrame(DoorWall * dw, VECTOR3D dir1v, VECTOR3D dir2v, VECTOR3D origin, float dh, float dwidth);

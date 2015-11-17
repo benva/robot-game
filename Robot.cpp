@@ -91,7 +91,7 @@ void Robot::draw(GLuint texid) {
   glEnd();
 
   glPopMatrix();
-  drawBB();
+  //  drawBB();
 }
 
 void Robot::initRobot(Room * room) {
