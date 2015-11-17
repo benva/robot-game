@@ -27,7 +27,6 @@ public:
 
   void move(bool up, bool down, bool left, bool right);
 
-
   void set(float newX, float newY, float newZ) {
     position.SetX(newX);
     position.SetY(newY); 

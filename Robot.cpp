@@ -4,7 +4,6 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <math.h>
-#include <stdio.h>
 
 #include "VECTOR3D.h"
 #include "Robot.hpp"
