@@ -92,7 +92,7 @@ void Robot::draw(GLuint texid) {
 
   glPopMatrix();
 
-  this->drawBB();
+  //  this->drawBB();
 
 }
 
