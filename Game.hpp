@@ -50,6 +50,7 @@ GLuint texid[NUM_TEX];
 float meshSize = 16.0;
 
 Robot *avatar;
+Bullet * bullet;
 
 // bools for arrow keys
 bool key_up = false;

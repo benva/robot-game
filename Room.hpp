@@ -25,7 +25,9 @@ hgt |  |  |dh   |
 #define MAX_MESH_SIZE 16
 #define DOOR_FRAME 0.5
 
+class Object;
 class Robot;
+
 typedef struct TextureQuad {
   VECTOR3D origin;
   VECTOR3D dir1v;
@@ -89,7 +91,7 @@ public:
   bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.0);
   bool addNeighbor(Room* newNeighbor, int wallid);
   void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
-  bool intersects(Robot * rob, float tx, float tz);
+  bool intersects(Object * o, float tx, float tz);
   VECTOR3D getCenter(void);
 };
 

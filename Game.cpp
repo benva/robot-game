@@ -15,7 +15,7 @@
 
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
-
+#include "Object.hpp"
 #include "Room.hpp"
 
 #include "Robot.hpp"
@@ -190,6 +190,8 @@ void display(void) {
   //Draw avatar
   //INSERT CODE
   avatar->draw(texid[0]);
+  if(bullet)
+    bullet->draw(texid[6]);
 
   glutSwapBuffers();
 }
@@ -208,6 +210,9 @@ void tick(int value) {
 
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
+
+  if(bullet)
+    bullet->move();
   
   camera = avatar->getPos();
   dir = avatar->getDir();
@@ -300,9 +305,9 @@ void functionKeysUp(int key, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-  if(key == ' ') {
-    // Make avatar shoot
-  }
+  // Make avatar shoot
+  if(key == ' ')
+    bullet = new Bullet(avatar);
 }
 
 VECTOR3D screenToWorld() {
