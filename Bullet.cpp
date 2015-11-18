@@ -1,3 +1,4 @@
+#include <iostream>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <GL/gl.h>
@@ -5,8 +6,9 @@
 #include <GL/glut.h>
 #include <math.h>
 
-#include "Room.hpp"
 #include "VECTOR3D.h"
+#include "QuadMesh.h"
+#include "Room.hpp"
 #include "Bullet.hpp"
 
 void Bullet::draw(GLuint texid) {

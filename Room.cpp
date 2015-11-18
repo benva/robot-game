@@ -4,7 +4,6 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-#include "Object.hpp"
 #include "RGBpixmap.h"
 #include "VECTOR3D.h"
 #include "QuadMesh.h"

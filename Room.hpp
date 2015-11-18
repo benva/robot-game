@@ -24,7 +24,9 @@ hgt |  |  |dh   |
 #define MESH_SIZE 1.0
 #define DOOR_FRAME 0.5
 
+class Object;
 class Robot;
+
 typedef struct TextureQuad {
   VECTOR3D origin;
   VECTOR3D dir1v;
