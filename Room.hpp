@@ -86,9 +86,9 @@ private:
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall; neighbor[1] = NULL; neighbor[2] = NULL; neighbor[3] = NULL;}
   ~Room() {}
-  bool initRoom(float newLength=4.0, float newWidth=3.0, float newHeight=3.0); 
+  bool initRoom(float newLength=4.0, float newWidth=3.0, float newHeight=4.0); 
   void draw();
-  bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.0);
+  bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.5);
   bool addNeighbor(Room* newNeighbor, int wallid);
   void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
   bool intersects(Object * o, float tx, float tz);

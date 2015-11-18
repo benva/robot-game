@@ -10,6 +10,7 @@
 #include "QuadMesh.h"
 #include "Room.hpp"
 #include "Robot.hpp"
+
 #include "Bullet.hpp"
 
 Bullet::Bullet(Robot * r) {
