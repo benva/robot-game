@@ -211,8 +211,7 @@ void tick(int value) {
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
 
-  if(bullet)
-    bullet->move();
+  if(bullet && !bullet->move()){ delete bullet; bullet = NULL; }
   
   camera = avatar->getPos();
   dir = avatar->getDir();

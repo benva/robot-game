@@ -1,7 +1,7 @@
 #ifndef EVILROBOT_H
 #define EVILROBOT_H
 
-#include "Object.hpp"
+#include "Robot.hpp"
 
 class EvilRobot : public Robot {
 private:

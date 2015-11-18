@@ -1,7 +1,7 @@
 #ifndef AVATAR_H
 #define AVATAR_H
 
-#include "Object.hpp"
+#include "Robot.hpp"
 
 class Avatar : public Robot {
 private:
