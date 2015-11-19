@@ -86,7 +86,7 @@ private:
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall; neighbor[1] = NULL; neighbor[2] = NULL; neighbor[3] = NULL;}
   ~Room();
-  bool initRoom(float newLength=4.0, float newWidth=3.0, float newHeight=4.0); 
+  bool initRoom(float newLength=7.0, float newWidth=7.0, float newHeight=4.0); 
   void draw();
   bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.5);
   bool addNeighbor(Room* newNeighbor, int wallid);

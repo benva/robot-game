@@ -10,7 +10,7 @@
 #include <math.h>
 #include <utility>
 #include <vector>
-#include <set>
+#include <list>
 
 #include "RGBpixmap.h"
 
@@ -26,7 +26,6 @@
 #include "Bullet.hpp"
 
 #include "Game.hpp"
-
 
 using namespace std;
 
@@ -56,7 +55,8 @@ int main(int argc, char **argv) {
 
 // Setup openGL
 void initOpenGL(int w, int h) {
-int i;
+  int i;
+ Room * room;
   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -79,7 +79,7 @@ int i;
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
 
-  glShadeModel(GL_SMOOTH);
+
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   //  glEnable(GL_LIGHT1);
@@ -106,8 +106,6 @@ int i;
   // Hide Cursor
   glutSetCursor(GLUT_CURSOR_NONE);
   
-
-
   //Nice perspective.
   glHint(GL_PERSPECTIVE_CORRECTION_HINT , GL_NICEST);
 
@@ -119,12 +117,15 @@ int i;
     texid[i] = 2000+i; 
  }
   
-  loadTexture(0, "textures/rock.bmp");
-  loadTexture(1, "textures/brick1.bmp");
-  loadTexture(2, "textures/brick2.bmp");
-  loadTexture(3, "textures/stone1.bmp");
-  loadTexture(4, "textures/stone2.bmp");
-  loadTexture(5, "textures/stone3.bmp");
+  //wall textures
+  loadTexture(0, "textures/brick1.bmp");
+  loadTexture(1, "textures/brick2.bmp");
+  loadTexture(2, "textures/stone2.bmp");
+  loadTexture(3, "textures/stone3.bmp");
+
+  //floor textures
+  loadTexture(4, "textures/stone1.bmp");
+  loadTexture(5, "textures/rock.bmp");
   loadTexture(6, "textures/wood.bmp");
 
   
@@ -136,31 +137,35 @@ int i;
   // in future use single room pointer and initialize new rooms only for that
   // then add them to the room set with insert
 
-  room[0] = new Room();
-  room[0]->initRoom();
-  rooms.insert(room[0]);
+  room = new Room();
+  room->initRoom();
+  rooms.push_back(room);
   
-  room[1] = new Room(room[0],1);
-  room[1]->initRoom(5,10);
-  room[1]->setTextures(texid[5],texid[6]);
-  rooms.insert(room[1]);
+  room = new Room(getRoomAt(0),1);
+  room->initRoom();
+  room->setTextures(texid[5],texid[6]);
+  rooms.push_back(room);
 
-  room[2] = new Room(room[1],1);
-  room[2]->initRoom();
-  room[2]->setTextures(texid[2],texid[3]);
-  rooms.insert(room[2]);
+  room = new Room(getRoomAt(0),3);
+  room->initRoom();
+  room->setTextures(texid[2],texid[3]);
+  rooms.push_back(room);
   
-  room[3] = new Room(room[1],3);
-  room[3]->initRoom(6,6);
-  room[3]->setTextures(texid[4],texid[0]);
-  rooms.insert(room[3]);
-  
-  room[4] = new Room(room[3],3);
-  room[4]->initRoom(8,10);
-  rooms.insert(room[4]);
+  room = new Room(getRoomAt(2),3);
+  room->initRoom(6,6);
+  room->setTextures(texid[4],texid[0]);
+  rooms.push_back(room);
 
-avatar = new Robot();
-avatar->initRobot(room[0]);
+  avatar = new Robot();
+  avatar->initRobot(getRoomAt(0));
+}
+
+Room * getRoomAt(int n) {
+  list<Room*>::iterator it = rooms.begin();
+  for(int i=0; i<n; ++it, ++i)
+    if(it == rooms.end()) return NULL;    
+
+  return (*it);
 }
 
 // Helper function for update
@@ -169,7 +174,7 @@ bool noNeighbors(Room * fromRoom, Room * aRoom) {
   Room * neighbor;
   for(i=0; i<4; i++) {
     neighbor = aRoom->getNeighbor(i);
-    if(neighbor != fromRoom && neighbor != NULL)
+    if(neighbor != NULL && neighbor != fromRoom )
       return false;
   }
   return true;
@@ -194,27 +199,43 @@ void traverseRooms(Room * fromRoom, Room * aRoom, int n) {
   int i;
   Room * neighbor;
   if( n == 0 ) {
-    for(i=0;i<4;i++)
+    for(i=0;i<4;i++) {
       neighbor = aRoom->getNeighbor(i);
-      if(neighbor != fromRoom && neighbor != NULL) {
-	cout << "erase " << neighbor << endl;
-	rooms.erase(neighbor);
+      if(neighbor != NULL && neighbor != fromRoom) {
+	cout << "remove " << neighbor << endl;
+	rooms.remove(neighbor);
 	delete neighbor;
       }
+    }
     return;
   }
   else if( n == 1 && noNeighbors(fromRoom, aRoom)) {
     cout << "make new rooms at " << aRoom << endl;
-   // create 1-3 new neighbors randomly
+    srand(time(NULL));
+    for(i=0; i<4; i++) {
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != fromRoom && neighbor == NULL) {	
+	if(rand()%3 == 0) {
+	  neighbor = new Room(aRoom,i);
+	  neighbor->initRoom(6,6);
+	  neighbor->setTextures(texid[rand()%4],texid[rand()%3+4]);
+	  rooms.push_back(neighbor);
+	}
+      }
+    }
+    // create 1-3 new neighbors randomly    
     return;
   }
-  else
-    for(i=0; i<4; i++)
+  else {
+    n--;
+    for(i=0; i<4; i++) {
       neighbor = aRoom->getNeighbor(i);
       if(neighbor != fromRoom && neighbor != NULL){
 	cout << "traverse from " << aRoom << " to " << neighbor << endl;
-	traverseRooms(aRoom, neighbor, --n);
+	traverseRooms(aRoom, neighbor, n);
       }
+    }
+  }
 }
 
 bool loadTexture(int i, char const * path) {
@@ -242,7 +263,7 @@ void display(void) {
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
   // ITERATE through room set to draw meshes
-  for(set<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
+  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
     (*it)->draw();
 
   /*  // Draw the Room meshes
@@ -298,6 +319,7 @@ void tick(int value) {
     
   }
   room_center = avatar->getCurrentRoom()->getCenter();
+  //  cout << room_center << endl;
   light_position0[0] = room_center.GetX();
   light_position0[2] = room_center.GetZ();
   

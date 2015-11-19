@@ -15,7 +15,6 @@ using namespace std;
 
 Room::~Room() {
   int i;
-
   for(i=0;i<4;i++)
     if(neighbor[i] != NULL)
       neighbor[i]->goodbye(this);
