@@ -10,6 +10,7 @@
 #include <math.h>
 #include <utility>
 #include <vector>
+#include <set>
 
 #include "RGBpixmap.h"
 
@@ -132,26 +133,88 @@ int i;
     setTexture(tex[i], texid[i]);
   }
 
+  // in future use single room pointer and initialize new rooms only for that
+  // then add them to the room set with insert
+
   room[0] = new Room();
   room[0]->initRoom();
-
+  rooms.insert(room[0]);
+  
   room[1] = new Room(room[0],1);
   room[1]->initRoom(5,10);
   room[1]->setTextures(texid[5],texid[6]);
+  rooms.insert(room[1]);
 
   room[2] = new Room(room[1],1);
   room[2]->initRoom();
   room[2]->setTextures(texid[2],texid[3]);
-
+  rooms.insert(room[2]);
+  
   room[3] = new Room(room[1],3);
   room[3]->initRoom(6,6);
   room[3]->setTextures(texid[4],texid[0]);
-
+  rooms.insert(room[3]);
+  
   room[4] = new Room(room[3],3);
   room[4]->initRoom(8,10);
-  
+  rooms.insert(room[4]);
+
 avatar = new Robot();
 avatar->initRobot(room[0]);
+}
+
+// Helper function for update
+bool noNeighbors(Room * fromRoom, Room * aRoom) {
+  int i;
+  Room * neighbor;
+  for(i=0; i<4; i++) {
+    neighbor = aRoom->getNeighbor(i);
+    if(neighbor != fromRoom && neighbor != NULL)
+      return false;
+  }
+  return true;
+}
+
+void updateRooms(Room * start) {
+  int i;
+  Room * neighbor;
+  for(i=0;i<4;i++) {
+    neighbor = start->getNeighbor(i);
+    if(neighbor != NULL) {
+      cout << "traverse " << neighbor << endl;
+      traverseRooms(start, neighbor ,1);
+
+    }
+  }
+  return;
+}
+
+// Update rooms based on players movement from fromRoom into aRoom to a recursive depth of n
+void traverseRooms(Room * fromRoom, Room * aRoom, int n) {
+  int i;
+  Room * neighbor;
+  if( n == 0 ) {
+    for(i=0;i<4;i++)
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != fromRoom && neighbor != NULL) {
+	cout << "erase " << neighbor << endl;
+	rooms.erase(neighbor);
+	delete neighbor;
+      }
+    return;
+  }
+  else if( n == 1 && noNeighbors(fromRoom, aRoom)) {
+    cout << "make new rooms at " << aRoom << endl;
+   // create 1-3 new neighbors randomly
+    return;
+  }
+  else
+    for(i=0; i<4; i++)
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != fromRoom && neighbor != NULL){
+	cout << "traverse from " << aRoom << " to " << neighbor << endl;
+	traverseRooms(aRoom, neighbor, --n);
+      }
 }
 
 bool loadTexture(int i, char const * path) {
@@ -178,12 +241,15 @@ void display(void) {
   // Set up camera
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
-  // Draw the Room meshes
+  // ITERATE through room set to draw meshes
+  for(set<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
+    (*it)->draw();
 
+  /*  // Draw the Room meshes
   i=-1;
   while(room[++i] != NULL)
     room[i]->draw();
-
+  */
   //Draw the Enemy Robots
   //INSERT CODE
 
@@ -206,10 +272,14 @@ void reshape(int w, int h) {
 }
 
 void tick(int value) {
+  Room * current;
   // Call Evil robot move methods
 
   // Update Avatar position
+  current = avatar->getCurrentRoom();
   avatar->move(key_up, key_down, key_left, key_right);
+  if(current != avatar->getCurrentRoom())
+    updateRooms(avatar->getCurrentRoom());
 
   if(bullet && !bullet->move()){ delete bullet; bullet = NULL; }
   

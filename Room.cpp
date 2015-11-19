@@ -13,6 +13,28 @@
 
 using namespace std;
 
+Room::~Room() {
+  int i;
+
+  for(i=0;i<4;i++)
+    if(neighbor[i] != NULL)
+      neighbor[i]->goodbye(this);
+  for(i=0;i<4;i++)
+    free(doorwall[i]);
+  free(floor);
+  free(tfloor);
+}
+
+void Room::goodbye(Room * room) {
+  int i;
+  for(i=0;i<4;i++)
+    if(neighbor[i] == room) {
+      addDoor(i,-1,-1,-1);
+      neighbor[i] = NULL;
+      return;
+    }
+}
+
 void Room::draw() {
   int i,j;
 

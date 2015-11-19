@@ -24,6 +24,9 @@ void tick(int value);
 void setTexture(RGBpixmap *tex, GLuint textureID);
 bool loadTexture(int i, char const * path);
 
+void traverseRooms(Room * fromRoom, Room * aRoom, int n);
+void updateRooms(Room * start);
+
 VECTOR3D screenToWorld(void);
 VECTOR3D mouseWorld;
 VECTOR3D camera = VECTOR3D(0.0,6.0,22.0);
@@ -51,6 +54,8 @@ float meshSize = 16.0;
 
 Robot *avatar;
 Bullet * bullet;
+
+set<Room*> rooms;
 
 // bools for arrow keys
 bool key_up = false;
