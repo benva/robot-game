@@ -155,9 +155,12 @@ void initOpenGL(int w, int h) {
   room->initRoom(6,6);
   room->setTextures(texid[4],texid[0]);
   rooms.push_back(room);
+  
+  avatar = new Avatar();
+  avatar->initRobot(rooms.front());
+  bot = new EvilRobot();
+  bot->initRobot(rooms.back());
 
-  avatar = new Robot();
-  avatar->initRobot(getRoomAt(0));
 }
 
 Room * getRoomAt(int n) {
@@ -273,6 +276,8 @@ void display(void) {
   */
   //Draw the Enemy Robots
   //INSERT CODE
+  if(bot)
+    bot->draw(texid[2]);
 
   //Draw avatar
   //INSERT CODE
@@ -302,7 +307,18 @@ void tick(int value) {
   if(current != avatar->getCurrentRoom())
     updateRooms(avatar->getCurrentRoom());
 
-  if(bullet && !bullet->move()){ delete bullet; bullet = NULL; }
+  if(bullet && !bullet->move()){ 
+    delete bullet; 
+    bullet = NULL; 
+  }
+
+  if(bullet && bot && bot->hit(bullet)) { 
+    delete bot; 
+    bot = NULL; 
+    delete bullet;
+    bullet = NULL;
+  }
+
   
   camera = avatar->getPos();
   dir = avatar->getDir();
@@ -399,6 +415,13 @@ void keyboard(unsigned char key, int x, int y) {
   // Make avatar shoot
   if(key == ' ')
     bullet = new Bullet(avatar);
+
+  // TAKE OUT
+  // Create a bot
+  if(key == 'b') {
+    bot = new EvilRobot();
+    bot->initRobot(rooms.back());
+  }
 }
 
 VECTOR3D screenToWorld() {

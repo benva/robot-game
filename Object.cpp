@@ -14,7 +14,6 @@ void Object::getBB(VECTOR3D * minBB, VECTOR3D * maxBB) {
   *maxBB = this->maxBB + position;
 }
 
-
 void Object::drawBB(void) {
   VECTOR3D min,max;
   getBB(&min,&max);
