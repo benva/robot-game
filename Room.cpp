@@ -348,7 +348,7 @@ bool Room::intersects(Object * o, float tx, float tz) {
   // Calculate wall_id o is running into
   wall_id = (wall_id + wall_dir)%4;  
 
-  cout << wall_id << " " << neighbor[wall_id] << endl;
+  // cout << wall_id << " " << neighbor[wall_id] << endl;
 
   // if the wall doesn't have a door, return true
   if(neighbor[wall_id] == NULL) return true;

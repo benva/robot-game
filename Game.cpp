@@ -218,7 +218,6 @@ void tick(int value) {
     delete bullet; 
     bullet = NULL; 
   }
-
   if(bullet && bot && bot->hit(bullet)) { 
     delete bot; 
     bot = NULL; 
@@ -226,7 +225,6 @@ void tick(int value) {
     bullet = NULL;
   }
 
-  
   camera = avatar->getPos();
   dir = avatar->getDir();
   lookAt = camera+dir;

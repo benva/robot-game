@@ -26,6 +26,7 @@ void Robot::draw(GLuint texid) {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBindTexture(GL_TEXTURE_2D, texid);
   glBegin(GL_QUADS);
+
   glTexCoord2f(0.0, 0.0);
   glVertex3f(-1.0f, 1.0f, -1.0f);
   glTexCoord2f(0.0, 1.0);  
@@ -132,13 +133,16 @@ void Robot::move(bool up, bool down, bool left, bool right) {
 }
 
 bool Robot::hit(Bullet * b) {
-  float dist1, dist2, distance;
+  float distance;
 
-  dist1 = sqrt(pow(this->position.GetX(), 2) + pow(this->position.GetY(), 2) + pow(this->position.GetZ(), 2));
-  dist2 = sqrt(pow(b->getPos().GetX(), 2) + pow(b->getPos().GetY(), 2) + pow(b->getPos().GetZ(), 2));
-  distance = fabs(dist1 - dist2);
+  distance = sqrt(pow(this->position.GetX()-b->getPos().GetX(), 2) + pow(this->position.GetY()-b->getPos().GetY(), 2) + pow(this->position.GetZ()-b->getPos().GetZ(), 2));
 
-  if(distance <= 0.1)
+  // cout << "robot " << this->position.GetX() << " " << this->position.GetY() << " " << this->position.GetZ() << " " << endl;
+  // cout << "bullet " << b->getPos().GetX() << " " << b->getPos().GetY() << " " << b->getPos().GetZ() << " " << endl;
+  // cout << "distance " << distance << endl;
+  // cout << endl;
+
+  if(distance < 0.5)
     return true;
 
   return false;

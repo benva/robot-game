@@ -1,7 +1,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#define BUL_INC 5
+#define BUL_INC 3.5
 
 #include "Object.hpp"
 
