@@ -33,6 +33,8 @@ void Bullet::draw(GLuint texid) {
   gluSphere(q, 0.2, 20, 30);
 
   glPopMatrix();
+
+  this->drawBB();
 }
 
 bool Bullet::move() {

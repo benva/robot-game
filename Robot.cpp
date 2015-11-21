@@ -9,6 +9,7 @@
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
 #include "Room.hpp"
+#include "Bullet.hpp"
 
 #include "Robot.hpp"
 
@@ -92,7 +93,7 @@ void Robot::draw(GLuint texid) {
 
   glPopMatrix();
 
-  //  this->drawBB();
+  this->drawBB();
 
 }
 
@@ -130,3 +131,15 @@ void Robot::move(bool up, bool down, bool left, bool right) {
 
 }
 
+bool Robot::hit(Bullet * b) {
+  float dist1, dist2, distance;
+
+  dist1 = sqrt(pow(this->position.GetX(), 2) + pow(this->position.GetY(), 2) + pow(this->position.GetZ(), 2));
+  dist2 = sqrt(pow(b->getPos().GetX(), 2) + pow(b->getPos().GetY(), 2) + pow(b->getPos().GetZ(), 2));
+  distance = fabs(dist1 - dist2);
+
+  if(distance <= 0.1)
+    return true;
+
+  return false;
+}

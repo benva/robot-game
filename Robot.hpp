@@ -10,6 +10,7 @@
 #define MOV_INC 0.1
 
 class Room;
+class Bullet;
 class Robot : public Object {
 protected:
   int health;
@@ -32,6 +33,8 @@ public:
   void move(bool up, bool down, bool left, bool right);
 
   void damage(int hp) { health -= hp; }
+
+  bool hit(Bullet * b);
 
   int getHealth(void) {return health; }
 };

@@ -26,7 +26,6 @@
 
 #include "Game.hpp"
 
-
 using namespace std;
 
 int main(int argc, char **argv) {
@@ -150,8 +149,10 @@ int i;
   room[4] = new Room(room[3],3);
   room[4]->initRoom(8,10);
   
-avatar = new Robot();
-avatar->initRobot(room[0]);
+  avatar = new Avatar();
+  avatar->initRobot(room[0]);
+  bot = new EvilRobot();
+  bot->initRobot(room[1]);
 }
 
 bool loadTexture(int i, char const * path) {
@@ -186,6 +187,8 @@ void display(void) {
 
   //Draw the Enemy Robots
   //INSERT CODE
+  if(bot)
+    bot->draw(texid[2]);
 
   //Draw avatar
   //INSERT CODE
@@ -211,7 +214,18 @@ void tick(int value) {
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
 
-  if(bullet && !bullet->move()){ delete bullet; bullet = NULL; }
+  if(bullet && !bullet->move()){ 
+    delete bullet; 
+    bullet = NULL; 
+  }
+
+  if(bullet && bot && bot->hit(bullet)) { 
+    delete bot; 
+    bot = NULL; 
+    delete bullet;
+    bullet = NULL;
+  }
+
   
   camera = avatar->getPos();
   dir = avatar->getDir();
@@ -307,6 +321,13 @@ void keyboard(unsigned char key, int x, int y) {
   // Make avatar shoot
   if(key == ' ')
     bullet = new Bullet(avatar);
+
+  // TAKE OUT
+  // Create a bot
+  if(key == 'b') {
+    bot = new EvilRobot();
+    bot->initRobot(room[1]);
+  }
 }
 
 VECTOR3D screenToWorld() {
