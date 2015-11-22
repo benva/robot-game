@@ -7,11 +7,34 @@
 #include "RGBpixmap.h"
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
-#include "Robot.hpp"
+#include "EvilRobot.hpp"
+//#include "Robot.hpp"
+
 
 #include "Room.hpp"
 
 using namespace std;
+
+Room::~Room() {
+  int i;
+  for(i=0;i<4;i++)
+    if(neighbor[i] != NULL)
+      neighbor[i]->goodbye(this);
+  for(i=0;i<4;i++)
+    free(doorwall[i]);
+  free(floor);
+  free(tfloor);
+}
+
+void Room::goodbye(Room * room) {
+  int i;
+  for(i=0;i<4;i++)
+    if(neighbor[i] == room) {
+      addDoor(i,-1,-1,-1);
+      neighbor[i] = NULL;
+      return;
+    }
+}
 
 void Room::draw() {
   int i,j;
@@ -35,6 +58,9 @@ void Room::draw() {
       }
     }
   }
+  for(list<EvilRobot*>::iterator it=bots.begin(); it!=bots.end(); ++it)
+    (*it)->draw(2000);
+
 }
 
 bool Room::initRoom(float newLength, float newWidth, float newHeight) {
@@ -399,9 +425,26 @@ int Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
   }
 }
 
-  /*  cout << "MinRoom: " << minRoom.GetX() << " " << minRoom.GetY() << " " << minRoom.GetZ() << endl;
-  cout << "MaxRoom: " << maxRoom.GetX() << " " << maxRoom.GetY() << " " << maxRoom.GetZ() << endl<<endl;
-  cout << "MinBB: " << minBB.GetX() << " " << minBB.GetY() << " " << minBB.GetZ() << endl;
-  cout << "MaxBB: " << maxBB.GetX() << " " << maxBB.GetY() << " " << maxBB.GetZ() << endl<<endl;
-  */
-  
+bool Room::hitbot(Bullet * bul) {  
+  for(list<EvilRobot*>::iterator it=bots.begin(); it!=bots.end(); ++it)
+    if((*it)->hit(bul)) {
+      delete (*it);
+      bots.remove(*it);
+      return true;
+    }
+
+  return false;
+}  
+
+// create new robot
+void Room::newBot() {
+  EvilRobot * bot;
+  bot = new EvilRobot();
+  bot->initRobot(this);
+  bots.push_back(bot);
+}
+
+// Moves all the evil robots around or creates new ones when player is close enough
+void Room::move() {
+  // Move evil robots
+}

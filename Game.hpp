@@ -25,6 +25,11 @@ void tick(int value);
 void setTexture(RGBpixmap *tex, GLuint textureID);
 bool loadTexture(int i, char const * path);
 
+void traverseRooms(Room * fromRoom, Room * aRoom, int n);
+void updateRooms(Room * start);
+
+Room * getRoomAt(int n);
+
 VECTOR3D screenToWorld(void);
 VECTOR3D mouseWorld;
 VECTOR3D camera = VECTOR3D(0.0,6.0,22.0);
@@ -32,18 +37,15 @@ VECTOR3D dir = VECTOR3D(1.0,0.0,0.0);
 VECTOR3D lookAt = VECTOR3D(0.0,0.0,0.0);
 VECTOR3D room_center;
 
-GLfloat light_position0[] = {3.0,  12.0, 3.0,1.0};
+GLfloat light_position0[] = {3.0, 1.0, 3.0,100.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};
 GLfloat light_diffuse[]   = {1.0, 1.0, 1.0, 1.0};
 GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};
 GLfloat light_ambient[]   = {0.0, 0.0, 0.0, 1.0};
 
-float camX=0.0, camY=6.0, camZ=22.0, camR=10.0,
+float camX=0.0, camY=6.0, camZ=22.0, camR=30.0,
   lookAtX=0.0, lookAtY=0.0, lookAtZ=0.0,
   camTheta, camPhi;
-
-
-Room *room[NUM_ROOMS];
 
 RGBpixmap * tex[NUM_TEX];
 GLuint texid[NUM_TEX];
@@ -51,11 +53,12 @@ GLuint texid[NUM_TEX];
 float meshSize = 16.0;
 
 Avatar * avatar;
-Bullet * avatarBullets[NUM_BUL];
-int currentBullet = 0;
+//EvilRobot * bot;
+//Bullet * bullet;
 
-EvilRobot * bot;
-
+list<Bullet*> bullets;
+list<Room*> rooms;
+list<EvilRobot*> bots;
 
 // bools for arrow keys
 bool key_up = false;

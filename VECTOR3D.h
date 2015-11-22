@@ -15,7 +15,8 @@
 
 #ifndef VECTOR3D_H
 #define VECTOR3D_H
-
+#include <iostream>
+using namespace std;
 class VECTOR3D
 {
 public:
@@ -149,6 +150,10 @@ public:
 		{	x/=rhs; y/=rhs; z/=rhs;	}
 	}
 
+	friend ostream& operator<<(ostream & os, const VECTOR3D & vec) {
+	  os << "x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z;
+	  return os;
+	}
 
 	//unary operators
 	VECTOR3D operator-(void) const {return VECTOR3D(-x, -y, -z);}

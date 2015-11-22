@@ -6,8 +6,8 @@
 
 #include "Object.hpp"
 
-#define ROT_INC 2.0
-#define MOV_INC 0.1
+#define ROT_INC 1.5
+#define MOV_INC 0.075
 
 class Room;
 class Bullet;

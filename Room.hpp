@@ -26,9 +26,11 @@ hgt |  |  |dh   |
 #define DOOR_FRAME 0.5
 #define NUM_BOTS 4
 
+#include <list>
+
 class Object;
 class Robot;
-class EvilRobot;
+class Bullet;
 
 typedef struct TextureQuad {
   VECTOR3D origin;
@@ -76,6 +78,8 @@ private:
   GLuint wall_texture;
   GLuint door_texture;
 
+  list<EvilRobot*> bots;
+
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin, Room * parent);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
@@ -87,14 +91,20 @@ private:
   bool within_doorway(int wall_dir, int wall_id, VECTOR3D * minBB, VECTOR3D * maxBB);
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall; neighbor[1] = NULL; neighbor[2] = NULL; neighbor[3] = NULL;}
-  ~Room() {}
-  bool initRoom(float newLength=4.0, float newWidth=3.0, float newHeight=4.0); 
+  ~Room();
+  bool initRoom(float newLength=7.0, float newWidth=7.0, float newHeight=4.0); 
   void draw();
   bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.5);
   bool addNeighbor(Room* newNeighbor, int wallid);
   void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
   bool intersects(Object * o, float tx, float tz);
   VECTOR3D getCenter(void);
+  Room * getNeighbor(int i) { return neighbor[i]; }
+  void setNeighbor(int i, Room * room) { neighbor[i] = room; }
+  void goodbye(Room * room);
+  bool hitbot(Bullet * bul);
+  void newBot();
+  void move();
 };
 
 #endif

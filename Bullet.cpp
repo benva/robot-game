@@ -42,5 +42,9 @@ bool Bullet::move() {
     return false;
   
   position += dir * BUL_INC;
+  
+  if(current_room->hitbot(this))
+    return false;
+
   return true;
 }

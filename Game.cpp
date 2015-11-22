@@ -10,6 +10,7 @@
 #include <math.h>
 #include <utility>
 #include <vector>
+#include <list>
 
 #include "RGBpixmap.h"
 
@@ -54,7 +55,8 @@ int main(int argc, char **argv) {
 
 // Setup openGL
 void initOpenGL(int w, int h) {
-int i;
+  int i;
+ Room * room;
   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -77,7 +79,7 @@ int i;
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
 
-  glShadeModel(GL_SMOOTH);
+
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   //  glEnable(GL_LIGHT1);
@@ -104,8 +106,6 @@ int i;
   // Hide Cursor
   glutSetCursor(GLUT_CURSOR_NONE);
   
-
-
   //Nice perspective.
   glHint(GL_PERSPECTIVE_CORRECTION_HINT , GL_NICEST);
 
@@ -117,12 +117,15 @@ int i;
     texid[i] = 2000+i; 
  }
   
-  loadTexture(0, "textures/rock.bmp");
-  loadTexture(1, "textures/brick1.bmp");
-  loadTexture(2, "textures/brick2.bmp");
-  loadTexture(3, "textures/stone1.bmp");
-  loadTexture(4, "textures/stone2.bmp");
-  loadTexture(5, "textures/stone3.bmp");
+  //wall textures
+  loadTexture(0, "textures/brick1.bmp");
+  loadTexture(1, "textures/brick2.bmp");
+  loadTexture(2, "textures/stone2.bmp");
+  loadTexture(3, "textures/stone3.bmp");
+
+  //floor textures
+  loadTexture(4, "textures/stone1.bmp");
+  loadTexture(5, "textures/rock.bmp");
   loadTexture(6, "textures/wood.bmp");
 
   
@@ -131,28 +134,109 @@ int i;
     setTexture(tex[i], texid[i]);
   }
 
-  room[0] = new Room();
-  room[0]->initRoom();
+  // in future use single room pointer and initialize new rooms only for that
+  // then add them to the room set with insert
 
-  room[1] = new Room(room[0],1);
-  room[1]->initRoom(5,10);
-  room[1]->setTextures(texid[5],texid[6]);
+  room = new Room();
+  room->initRoom();
+  rooms.push_back(room);
+  
+  room = new Room(getRoomAt(0),1);
+  room->initRoom();
+  room->setTextures(texid[5],texid[6]);
+  rooms.push_back(room);
 
-  room[2] = new Room(room[1],1);
-  room[2]->initRoom();
-  room[2]->setTextures(texid[2],texid[3]);
-
-  room[3] = new Room(room[1],3);
-  room[3]->initRoom(6,6);
-  room[3]->setTextures(texid[4],texid[0]);
-
-  room[4] = new Room(room[3],3);
-  room[4]->initRoom(8,10);
+  room = new Room(getRoomAt(0),3);
+  room->initRoom();
+  room->setTextures(texid[2],texid[3]);
+  rooms.push_back(room);
+  
+  room = new Room(getRoomAt(2),3);
+  room->initRoom(6,6);
+  room->setTextures(texid[4],texid[0]);
+  rooms.push_back(room);
   
   avatar = new Avatar();
-  avatar->initRobot(room[0]);
-  bot = new EvilRobot();
-  bot->initRobot(room[1]);
+  avatar->initRobot(rooms.front());
+
+}
+
+Room * getRoomAt(int n) {
+  list<Room*>::iterator it = rooms.begin();
+  for(int i=0; i<n; ++it, ++i)
+    if(it == rooms.end()) return NULL;    
+
+  return (*it);
+}
+
+// Helper function for update
+bool noNeighbors(Room * fromRoom, Room * aRoom) {
+  int i;
+  Room * neighbor;
+  for(i=0; i<4; i++) {
+    neighbor = aRoom->getNeighbor(i);
+    if(neighbor != NULL && neighbor != fromRoom )
+      return false;
+  }
+  return true;
+}
+
+void updateRooms(Room * start) {
+  int i;
+  Room * neighbor;
+  for(i=0;i<4;i++) {
+    neighbor = start->getNeighbor(i);
+    if(neighbor != NULL) {
+      cout << "traverse " << neighbor << endl;
+      traverseRooms(start, neighbor ,1);
+
+    }
+  }
+  return;
+}
+
+// Update rooms based on players movement from fromRoom into aRoom to a recursive depth of n
+void traverseRooms(Room * fromRoom, Room * aRoom, int n) {
+  int i;
+  Room * neighbor;
+  if( n == 0 ) {
+    for(i=0;i<4;i++) {
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != NULL && neighbor != fromRoom) {
+	cout << "remove " << neighbor << endl;
+	rooms.remove(neighbor);
+	delete neighbor;
+      }
+    }
+    return;
+  }
+  else if( n == 1 && noNeighbors(fromRoom, aRoom)) {
+    cout << "make new rooms at " << aRoom << endl;
+    srand(time(NULL));
+    for(i=0; i<4; i++) {
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != fromRoom && neighbor == NULL) {	
+	if(rand()%3 == 0) {
+	  neighbor = new Room(aRoom,i);
+	  neighbor->initRoom(6,6);
+	  neighbor->setTextures(texid[rand()%4],texid[rand()%3+4]);
+	  rooms.push_back(neighbor);
+	}
+      }
+    }
+    // create 1-3 new neighbors randomly    
+    return;
+  }
+  else {
+    n--;
+    for(i=0; i<4; i++) {
+      neighbor = aRoom->getNeighbor(i);
+      if(neighbor != fromRoom && neighbor != NULL){
+	cout << "traverse from " << aRoom << " to " << neighbor << endl;
+	traverseRooms(aRoom, neighbor, n);
+      }
+    }
+  }
 }
 
 bool loadTexture(int i, char const * path) {
@@ -179,23 +263,16 @@ void display(void) {
   // Set up camera
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
-  // Draw the Room meshes
-
-  i=-1;
-  while(room[++i] != NULL)
-    room[i]->draw();
-
-  //Draw the Enemy Robots
-  //INSERT CODE
-  if(bot)
-    bot->draw(texid[2]);
+  // ITERATE through room set to draw meshes - in turn draws all bots
+  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
+    (*it)->draw();
 
   //Draw avatar
-  //INSERT CODE
   avatar->draw(texid[0]);
-  for(i = 0; i < NUM_BUL; i++)
-    if(avatarBullets[i])
-      avatarBullets[i]->draw(texid[6]);
+  
+  //Draw Bullets
+  for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end(); ++it)
+    (*it)->draw(texid[6]);
 
   glutSwapBuffers();
 }
@@ -210,11 +287,21 @@ void reshape(int w, int h) {
 }
 
 void tick(int value) {
+  Room * current;
   // Call Evil robot move methods
 
+  // Mode B: auto room generation
+  /* current = avatar->getCurrentRoom();
+   avatar->move(key_up, key_down, key_left, key_right);
+  if(current != avatar->getCurrentRoom())
+    updateRooms(avatar->getCurrentRoom());
+  */
+
+  // Mode A: static rooms
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
 
+<<<<<<< HEAD
   for(int i = 0; i < NUM_BUL; i++) {
     if(avatarBullets[i]) {
       // Checks if avatar's bullets have hit a wall
@@ -232,6 +319,33 @@ void tick(int value) {
     }
   }
 
+=======
+  // Move all Bullets
+  for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)
+    if(!(*it)->move()){
+      list<Bullet*>::iterator del=it;
+      ++it;
+      delete (*del);      
+      bullets.remove(*del);
+    } else ++it;
+
+  // Call update function in room. Manages evil robots
+  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
+    (*it)->move();
+
+  /*  if(bullet && !bullet->move()){ 
+    delete bullet; 
+    bullet = NULL; 
+    }*/
+
+  /*  if(bullet && bot && bot->hit(bullet)) { 
+    delete bot; 
+    bot = NULL; 
+    delete bullet;
+    bullet = NULL;
+    }*/
+  
+>>>>>>> 65da70924bef2cd2d1840bbd31e19ce4f284e347
   camera = avatar->getPos();
   dir = avatar->getDir();
   lookAt = camera+dir;
@@ -247,6 +361,7 @@ void tick(int value) {
     
   }
   room_center = avatar->getCurrentRoom()->getCenter();
+  //  cout << room_center << endl;
   light_position0[0] = room_center.GetX();
   light_position0[2] = room_center.GetZ();
   
@@ -323,7 +438,9 @@ void functionKeysUp(int key, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+  Bullet * bullet;
   // Make avatar shoot
+<<<<<<< HEAD
   if(key == ' ') {
     avatarBullets[currentBullet] = new Bullet(avatar);
     currentBullet = (currentBullet+1) % NUM_BUL;
@@ -334,7 +451,17 @@ void keyboard(unsigned char key, int x, int y) {
   if(key == 'b') {
     bot = new EvilRobot();
     bot->initRobot(room[1]);
+=======
+  if(key == ' '){
+    bullet = new Bullet(avatar);
+    bullets.push_back(bullet);
+>>>>>>> 65da70924bef2cd2d1840bbd31e19ce4f284e347
   }
+   
+  // Create a bot
+  //TAKE OUT
+  if(key == 'b')
+    rooms.back()->newBot();
 }
 
 VECTOR3D screenToWorld() {
