@@ -24,9 +24,11 @@ hgt |  |  |dh   |
 #define MESH_SIZE 16
 #define MAX_MESH_SIZE 16
 #define DOOR_FRAME 0.5
+#define NUM_BOTS 4
 
 class Object;
 class Robot;
+class EvilRobot;
 
 typedef struct TextureQuad {
   VECTOR3D origin;

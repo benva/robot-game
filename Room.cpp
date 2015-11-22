@@ -399,7 +399,6 @@ int Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
   }
 }
 
-
   /*  cout << "MinRoom: " << minRoom.GetX() << " " << minRoom.GetY() << " " << minRoom.GetZ() << endl;
   cout << "MaxRoom: " << maxRoom.GetX() << " " << maxRoom.GetY() << " " << maxRoom.GetZ() << endl<<endl;
   cout << "MinBB: " << minBB.GetX() << " " << minBB.GetY() << " " << minBB.GetZ() << endl;
