@@ -6,6 +6,7 @@
 #define FRAME_RATE 10
 #define NUM_TEX 16
 #define NUM_ROOMS 16
+#define NUM_BUL 16
 
 void initOpenGL(int w, int h);
 void display(void);
@@ -50,8 +51,11 @@ GLuint texid[NUM_TEX];
 float meshSize = 16.0;
 
 Avatar * avatar;
+Bullet * avatarBullets[NUM_BUL];
+int currentBullet = 0;
+
 EvilRobot * bot;
-Bullet * bullet;
+
 
 // bools for arrow keys
 bool key_up = false;

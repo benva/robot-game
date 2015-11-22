@@ -193,8 +193,9 @@ void display(void) {
   //Draw avatar
   //INSERT CODE
   avatar->draw(texid[0]);
-  if(bullet)
-    bullet->draw(texid[6]);
+  for(i = 0; i < NUM_BUL; i++)
+    if(avatarBullets[i])
+      avatarBullets[i]->draw(texid[6]);
 
   glutSwapBuffers();
 }
@@ -214,15 +215,21 @@ void tick(int value) {
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
 
-  if(bullet && !bullet->move()){ 
-    delete bullet; 
-    bullet = NULL; 
-  }
-  if(bullet && bot && bot->hit(bullet)) { 
-    delete bot; 
-    bot = NULL; 
-    delete bullet;
-    bullet = NULL;
+  for(int i = 0; i < NUM_BUL; i++) {
+    if(avatarBullets[i]) {
+      // Checks if avatar's bullets have hit a wall
+      if(!avatarBullets[i]->move()) {
+        delete avatarBullets[i];
+        avatarBullets[i] = NULL;
+      }
+      // Checks if avatar's bullets have hit a bot
+      else if(bot && bot->hit(avatarBullets[i])) {
+        delete bot;
+        bot = NULL;
+        delete avatarBullets[i];
+        avatarBullets[i] = NULL;
+      }
+    }
   }
 
   camera = avatar->getPos();
@@ -317,8 +324,10 @@ void functionKeysUp(int key, int x, int y) {
 
 void keyboard(unsigned char key, int x, int y) {
   // Make avatar shoot
-  if(key == ' ')
-    bullet = new Bullet(avatar);
+  if(key == ' ') {
+    avatarBullets[currentBullet] = new Bullet(avatar);
+    currentBullet = (currentBullet+1) % NUM_BUL;
+  }
 
   // TAKE OUT
   // Create a bot

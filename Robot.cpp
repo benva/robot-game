@@ -132,10 +132,14 @@ void Robot::move(bool up, bool down, bool left, bool right) {
 
 }
 
+// Checks if Bullet has hit a Robot or not
 bool Robot::hit(Bullet * b) {
-  float distance;
+  float distance, dx, dy, dz;
 
-  distance = sqrt(pow(this->position.GetX()-b->getPos().GetX(), 2) + pow(this->position.GetY()-b->getPos().GetY(), 2) + pow(this->position.GetZ()-b->getPos().GetZ(), 2));
+  dx = this->position.GetX() - b->getPos().GetX();
+  dy = this->position.GetY() - b->getPos().GetY();
+  dz = this->position.GetZ() - b->getPos().GetZ();
+  distance = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
 
   // cout << "robot " << this->position.GetX() << " " << this->position.GetY() << " " << this->position.GetZ() << " " << endl;
   // cout << "bullet " << b->getPos().GetX() << " " << b->getPos().GetY() << " " << b->getPos().GetZ() << " " << endl;
