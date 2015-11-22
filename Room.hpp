@@ -25,8 +25,12 @@ hgt |  |  |dh   |
 #define MAX_MESH_SIZE 16
 #define DOOR_FRAME 0.5
 
+#include <list>
+
 class Object;
 class Robot;
+class EvilRobot;
+class Bullet;
 
 typedef struct TextureQuad {
   VECTOR3D origin;
@@ -74,6 +78,8 @@ private:
   GLuint wall_texture;
   GLuint door_texture;
 
+  list<EvilRobot*> bots;
+
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin, Room * parent);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
@@ -96,6 +102,9 @@ public:
   Room * getNeighbor(int i) { return neighbor[i]; }
   void setNeighbor(int i, Room * room) { neighbor[i] = room; }
   void goodbye(Room * room);
+  bool hitbot(Bullet * bul);
+  void newBot();
+  void move();
 };
 
 #endif

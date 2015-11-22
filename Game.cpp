@@ -158,8 +158,6 @@ void initOpenGL(int w, int h) {
   
   avatar = new Avatar();
   avatar->initRobot(rooms.front());
-  bot = new EvilRobot();
-  bot->initRobot(rooms.back());
 
 }
 
@@ -265,25 +263,16 @@ void display(void) {
   // Set up camera
   gluLookAt(camX, camY, camZ, lookAtX, lookAtY, lookAtZ, 0.0,1.0,0.0);
 
-  // ITERATE through room set to draw meshes
+  // ITERATE through room set to draw meshes - in turn draws all bots
   for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
     (*it)->draw();
 
-  /*  // Draw the Room meshes
-  i=-1;
-  while(room[++i] != NULL)
-    room[i]->draw();
-  */
-  //Draw the Enemy Robots
-  //INSERT CODE
-  if(bot)
-    bot->draw(texid[2]);
-
   //Draw avatar
-  //INSERT CODE
   avatar->draw(texid[0]);
-  if(bullet)
-    bullet->draw(texid[6]);
+  
+  //Draw Bullets
+  for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end(); ++it)
+    (*it)->draw(texid[6]);
 
   glutSwapBuffers();
 }
@@ -301,24 +290,41 @@ void tick(int value) {
   Room * current;
   // Call Evil robot move methods
 
-  // Update Avatar position
-  current = avatar->getCurrentRoom();
-  avatar->move(key_up, key_down, key_left, key_right);
+  // Mode B: auto room generation
+  /* current = avatar->getCurrentRoom();
+   avatar->move(key_up, key_down, key_left, key_right);
   if(current != avatar->getCurrentRoom())
     updateRooms(avatar->getCurrentRoom());
+  */
 
-  if(bullet && !bullet->move()){ 
+  // Mode A: static rooms
+  // Update Avatar position
+  avatar->move(key_up, key_down, key_left, key_right);
+
+  // Move all Bullets
+  for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)
+    if(!(*it)->move()){
+      list<Bullet*>::iterator del=it;
+      ++it;
+      delete (*del);      
+      bullets.remove(*del);
+    } else ++it;
+
+  // Call update function in room. Manages evil robots
+  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
+    (*it)->move();
+
+  /*  if(bullet && !bullet->move()){ 
     delete bullet; 
     bullet = NULL; 
-  }
+    }*/
 
-  if(bullet && bot && bot->hit(bullet)) { 
+  /*  if(bullet && bot && bot->hit(bullet)) { 
     delete bot; 
     bot = NULL; 
     delete bullet;
     bullet = NULL;
-  }
-
+    }*/
   
   camera = avatar->getPos();
   dir = avatar->getDir();
@@ -412,16 +418,17 @@ void functionKeysUp(int key, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+  Bullet * bullet;
   // Make avatar shoot
-  if(key == ' ')
+  if(key == ' '){
     bullet = new Bullet(avatar);
-
-  // TAKE OUT
-  // Create a bot
-  if(key == 'b') {
-    bot = new EvilRobot();
-    bot->initRobot(rooms.back());
+    bullets.push_back(bullet);
   }
+   
+  // Create a bot
+  //TAKE OUT
+  if(key == 'b')
+    rooms.back()->newBot();
 }
 
 VECTOR3D screenToWorld() {

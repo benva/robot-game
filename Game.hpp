@@ -52,10 +52,12 @@ GLuint texid[NUM_TEX];
 float meshSize = 16.0;
 
 Avatar * avatar;
-EvilRobot * bot;
-Bullet * bullet;
+//EvilRobot * bot;
+//Bullet * bullet;
 
+list<Bullet*> bullets;
 list<Room*> rooms;
+list<EvilRobot*> bots;
 
 // bools for arrow keys
 bool key_up = false;
