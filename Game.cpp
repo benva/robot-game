@@ -301,25 +301,6 @@ void tick(int value) {
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
 
-<<<<<<< HEAD
-  for(int i = 0; i < NUM_BUL; i++) {
-    if(avatarBullets[i]) {
-      // Checks if avatar's bullets have hit a wall
-      if(!avatarBullets[i]->move()) {
-        delete avatarBullets[i];
-        avatarBullets[i] = NULL;
-      }
-      // Checks if avatar's bullets have hit a bot
-      else if(bot && bot->hit(avatarBullets[i])) {
-        delete bot;
-        bot = NULL;
-        delete avatarBullets[i];
-        avatarBullets[i] = NULL;
-      }
-    }
-  }
-
-=======
   // Move all Bullets
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)
     if(!(*it)->move()){
@@ -345,7 +326,6 @@ void tick(int value) {
     bullet = NULL;
     }*/
   
->>>>>>> 65da70924bef2cd2d1840bbd31e19ce4f284e347
   camera = avatar->getPos();
   dir = avatar->getDir();
   lookAt = camera+dir;
@@ -440,22 +420,9 @@ void functionKeysUp(int key, int x, int y) {
 void keyboard(unsigned char key, int x, int y) {
   Bullet * bullet;
   // Make avatar shoot
-<<<<<<< HEAD
-  if(key == ' ') {
-    avatarBullets[currentBullet] = new Bullet(avatar);
-    currentBullet = (currentBullet+1) % NUM_BUL;
-  }
-
-  // TAKE OUT
-  // Create a bot
-  if(key == 'b') {
-    bot = new EvilRobot();
-    bot->initRobot(room[1]);
-=======
   if(key == ' '){
     bullet = new Bullet(avatar);
     bullets.push_back(bullet);
->>>>>>> 65da70924bef2cd2d1840bbd31e19ce4f284e347
   }
    
   // Create a bot

@@ -104,7 +104,7 @@ void Robot::initRobot(Room * room) {
     position.SetY(position.GetY() + 2.0);
 }
 
-void Robot::move(bool up, bool down, bool left, bool right) {
+bool Robot::move(bool up, bool down, bool left, bool right) {
   float angle, tx, tz;
   if(left) this->angle += ROT_INC;
   else if(right) this->angle -= ROT_INC;
@@ -128,17 +128,18 @@ void Robot::move(bool up, bool down, bool left, bool right) {
     if(!current_room->intersects(this, tx, tz)) {
       position.SetX(position.GetX() + tx);
       position.SetZ(position.GetZ() + tz);
+      return true;
     }
-
+  return false;
 }
 
 // Checks if Bullet has hit a Robot or not
-bool Robot::hit(Bullet * b) {
+bool Robot::hit(Object * b) {
   float distance, dx, dy, dz;
 
-  dx = this->position.GetX() - b->getPos().GetX();
-  dy = this->position.GetY() - b->getPos().GetY();
-  dz = this->position.GetZ() - b->getPos().GetZ();
+  dx = this->getPos().GetX() - b->getPos().GetX();
+  dy = this->getPos().GetY() - b->getPos().GetY();
+  dz = this->getPos().GetZ() - b->getPos().GetZ();
   distance = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
 
   // cout << "robot " << this->position.GetX() << " " << this->position.GetY() << " " << this->position.GetZ() << " " << endl;
@@ -150,4 +151,9 @@ bool Robot::hit(Bullet * b) {
     return true;
 
   return false;
+}
+
+// Reverses a Robot's direction
+void Robot::reverse() {
+  setAngle(getAngle()+180);
 }
