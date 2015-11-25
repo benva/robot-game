@@ -20,6 +20,11 @@ using namespace std;
 class VECTOR3D
 {
 public:
+	//member variables
+	float x;
+	float y;
+	float z;
+
 	//constructors
 	VECTOR3D(void)	:	x(0.0f), y(0.0f), z(0.0f)
 	{}
@@ -163,10 +168,6 @@ public:
 	operator float* () const {return (float*) this;}
 	operator const float* () const {return (const float*) this;}
 
-	//member variables
-	float x;
-	float y;
-	float z;
 };
 
 #endif	//VECTOR3D_H

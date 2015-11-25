@@ -59,6 +59,8 @@ list<Bullet*> bullets;
 list<Room*> rooms;
 list<EvilRobot*> bots;
 
+OBJModel * mod;
+
 // bools for arrow keys
 bool key_up = false;
 bool key_down = false;

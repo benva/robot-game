@@ -14,11 +14,13 @@
 
 #include "RGBpixmap.h"
 
+
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
 #include "Object.hpp"
 #include "Room.hpp"
 
+#include "OBJModel.hpp"
 #include "Robot.hpp"
 
 #include "Avatar.hpp"
@@ -158,7 +160,9 @@ void initOpenGL(int w, int h) {
   
   avatar = new Avatar();
   avatar->initRobot(rooms.front());
-
+  
+  mod = new OBJModel();
+  mod->load("models/test.obj");
 }
 
 Room * getRoomAt(int n) {
@@ -256,7 +260,6 @@ void setTexture(RGBpixmap * tex, GLuint textureID) {
 
 // function to display everything to the screen
 void display(void) {
-  int i;
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
 
@@ -274,6 +277,7 @@ void display(void) {
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end(); ++it)
     (*it)->draw(texid[6]);
 
+  mod->draw();
   glutSwapBuffers();
 }
 
@@ -287,11 +291,9 @@ void reshape(int w, int h) {
 }
 
 void tick(int value) {
-  Room * current;
-  // Call Evil robot move methods
-
   // Mode B: auto room generation
-  /* current = avatar->getCurrentRoom();
+  /*  Room * current;
+  current = avatar->getCurrentRoom();
    avatar->move(key_up, key_down, key_left, key_right);
   if(current != avatar->getCurrentRoom())
     updateRooms(avatar->getCurrentRoom());
