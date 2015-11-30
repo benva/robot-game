@@ -5,10 +5,12 @@
 #define ROBOT_H
 
 #include "Object.hpp"
+#include "Bullet.hpp"
 
 #define ROT_INC 1.5
 #define MOV_INC 0.075
 
+class Object;
 class Room;
 class Bullet;
 class OBJModel;
@@ -28,13 +30,15 @@ public:
   
   void draw(GLuint texid);
 
-  void move(bool up, bool down, bool left, bool right);
+  bool move(bool up, bool down, bool left, bool right);
 
   void damage(int hp) { health -= hp; }
 
-  bool hit(Bullet * b);
+  bool hit(Object * b);
 
   int getHealth(void) {return health; }
+
+  void reverse();
 };
 
 #endif

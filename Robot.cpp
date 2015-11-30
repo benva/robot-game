@@ -37,8 +37,8 @@ void Robot::draw(GLuint texid) {
   glTranslatef(this->getPos().GetX(), 0, this->getPos().GetZ());
   glRotatef(this->getAngle(), 0, 1, 0);
 
+<<<<<<< HEAD
   Robot::model.draw();
-
   glPopMatrix();
 
   this->drawBB();
@@ -51,7 +51,7 @@ void Robot::initRobot(Room * room) {
     position.SetY(position.GetY() + 2.0);
 }
 
-void Robot::move(bool up, bool down, bool left, bool right) {
+bool Robot::move(bool up, bool down, bool left, bool right) {
   float angle, tx, tz;
   if(left) this->angle += ROT_INC;
   else if(right) this->angle -= ROT_INC;
@@ -75,19 +75,32 @@ void Robot::move(bool up, bool down, bool left, bool right) {
     if(!current_room->intersects(this, tx, tz)) {
       position.SetX(position.GetX() + tx);
       position.SetZ(position.GetZ() + tz);
+      return true;
     }
-
+  return false;
 }
 
-bool Robot::hit(Bullet * b) {
-  float dist1, dist2, distance;
+// Checks if Bullet has hit a Robot or not
+bool Robot::hit(Object * b) {
+  float distance, dx, dy, dz;
 
-  dist1 = sqrt(pow(this->position.GetX(), 2) + pow(this->position.GetY(), 2) + pow(this->position.GetZ(), 2));
-  dist2 = sqrt(pow(b->getPos().GetX(), 2) + pow(b->getPos().GetY(), 2) + pow(b->getPos().GetZ(), 2));
-  distance = fabs(dist1 - dist2);
+  dx = this->getPos().GetX() - b->getPos().GetX();
+  dy = this->getPos().GetY() - b->getPos().GetY();
+  dz = this->getPos().GetZ() - b->getPos().GetZ();
+  distance = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
 
-  if(distance <= 0.1)
+  // cout << "robot " << this->position.GetX() << " " << this->position.GetY() << " " << this->position.GetZ() << " " << endl;
+  // cout << "bullet " << b->getPos().GetX() << " " << b->getPos().GetY() << " " << b->getPos().GetZ() << " " << endl;
+  // cout << "distance " << distance << endl;
+  // cout << endl;
+
+  if(distance < 0.5)
     return true;
 
   return false;
+}
+
+// Reverses a Robot's direction
+void Robot::reverse() {
+  setAngle(getAngle()+180);
 }

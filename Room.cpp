@@ -3,6 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <time.h>
 
 #include "RGBpixmap.h"
 #include "VECTOR3D.h"
@@ -374,7 +375,7 @@ bool Room::intersects(Object * o, float tx, float tz) {
   // Calculate wall_id o is running into
   wall_id = (wall_id + wall_dir)%4;  
 
-  cout << wall_id << " " << neighbor[wall_id] << endl;
+  // cout << wall_id << " " << neighbor[wall_id] << endl;
 
   // if the wall doesn't have a door, return true
   if(neighbor[wall_id] == NULL) return true;
@@ -425,8 +426,7 @@ int Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
   }
 }
 
-bool Room::hitbot(Bullet * bul) {
-  
+bool Room::hitbot(Bullet * bul) {  
   for(list<EvilRobot*>::iterator it=bots.begin(); it!=bots.end(); ++it)
     if((*it)->hit(bul)) {
       delete (*it);
@@ -445,7 +445,33 @@ void Room::newBot() {
   bots.push_back(bot);
 }
 
-// Moves all the evil robots around or creates new ones when player is close enough
+// Moves all the evil robots around the room they are in
 void Room::move() {
+  int dir;
+  bool left, right;
+
   // Move evil robots
+  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
+    left = right = false;
+    srand(time(NULL));
+    
+    dir = rand() % 2;
+    dir == 1 ? left = true : right = true;
+
+    collision(*it);
+
+    // While bot can't move forward, turn it left or right randomly
+    while(!(*it)->move(true, false, false, false))
+      (*it)->move(false, false, left, right);
+  }
+}
+
+// Checks if any bots are colliding and if so changes their trajectories
+void Room::collision(EvilRobot * bot) {
+  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
+    if((*it) != bot && (*it)->hit(bot)) {
+      (*it)->reverse();
+      bot->reverse();
+    }
+  }
 }
