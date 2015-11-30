@@ -26,3 +26,16 @@ void Object::drawBB(void) {
   glutWireCube(0.5);
   glPopMatrix();
 }
+
+
+void Object::setDir(VECTOR3D newDir) {
+  float newAngle;
+
+  this->dir = newDir;
+  newAngle = fabs(atan2f(dir.GetX(), dir.GetZ()))*180/M_PI;
+
+  cout << "newAngle: " << newAngle;
+  cout << " currentAngle: " << this->getAngle() << endl;
+
+  this->setAngle(newAngle);
+}

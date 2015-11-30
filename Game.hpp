@@ -62,8 +62,8 @@ Avatar * avatar;
 
 list<Bullet*> bullets;
 list<Room*> rooms;
-//list<EvilRobot*> bots;
 
+//list<EvilRobot*> bots;
 //OBJModel * robotModel;
 
 // bools for arrow keys
