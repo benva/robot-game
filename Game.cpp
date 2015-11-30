@@ -24,10 +24,11 @@
 #include "Robot.hpp"
 
 #include "Avatar.hpp"
-#include "EvilRobot.hpp"
 #include "Bullet.hpp"
+#include "EvilRobot.hpp"
 
 #include "Game.hpp"
+
 
 using namespace std;
 
@@ -80,7 +81,7 @@ void initOpenGL(int w, int h) {
   
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
   //  glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45);
-  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
+  //  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
 
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
 
@@ -166,8 +167,8 @@ void initOpenGL(int w, int h) {
   avatar = new Avatar();
   avatar->initRobot(rooms.front());
   
-  mod = new OBJModel();
-  mod->load("models/evil_robot.obj");
+
+  Robot::model.load("models/evil_robot.obj");
 }
 
 Room * getRoomAt(int n) {
@@ -282,7 +283,7 @@ void display(void) {
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end(); ++it)
     (*it)->draw(texid[6]);
 
-  mod->draw();
+  //  mod->draw();
   glutSwapBuffers();
 }
 

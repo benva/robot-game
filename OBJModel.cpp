@@ -15,8 +15,8 @@ using namespace std;
 void OBJModel::draw() {
   glBindTexture(GL_TEXTURE_2D, 2007);
   glPushMatrix();
-  glTranslatef(2,0,-2);
   glScalef(0.12,0.12,0.12);
+  glRotatef(180,0,1.0,0);
   for(unsigned int i=0; i<vertices.size(); i+=3) {
     glBegin(GL_TRIANGLES);
     glTexCoord2f(uvs[i].x, uvs[i].y);

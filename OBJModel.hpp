@@ -8,7 +8,10 @@ private:
   std::vector<VECTOR3D> uvs;
   std::vector<VECTOR3D> normals;
 public:
+  OBJModel() {};
+
   bool load(const char * path);
   void draw();
+  
 };
 #endif
