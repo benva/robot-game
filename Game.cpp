@@ -299,13 +299,13 @@ void reshape(int w, int h) {
 
 void tick(int value) {
   // Mode B: auto room generation
-  /*  Room * current;
+  /*  
   current = avatar->getCurrentRoom();
    avatar->move(key_up, key_down, key_left, key_right);
   if(current != avatar->getCurrentRoom())
     updateRooms(avatar->getCurrentRoom());
   */
-
+  Room * current;
   // Mode A: static rooms
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
