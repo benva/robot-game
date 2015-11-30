@@ -16,8 +16,8 @@
 using namespace std;
 
 void Robot::draw(GLuint texid) {
-  // Transform Robot before rendering its textures
 
+  // Transform Robot before rendering its textures
   glPushMatrix();
   glTranslatef(this->getPos().GetX(), 0, this->getPos().GetZ());
   glRotatef(this->getAngle(), 0, 1, 0);

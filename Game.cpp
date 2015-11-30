@@ -303,16 +303,21 @@ void tick(int value) {
 
   // Move all Bullets
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)
-    if(!(*it)->move()){
+    if(!(*it)->move()) {
       list<Bullet*>::iterator del=it;
       ++it;
       delete (*del);      
       bullets.remove(*del);
     } else ++it;
 
-  // Call update function in room. Manages evil robots
-  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it)
-    (*it)->move();
+  // Call update function in room
+  // If avatar is in room, attack them, otherwise move bots around room
+  current = avatar->getCurrentRoom();
+  for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it) {
+    if((*it) == current)
+      (*it)->attack(avatar);
+    else (*it)->move();
+  }
 
   /*  if(bullet && !bullet->move()){ 
     delete bullet; 

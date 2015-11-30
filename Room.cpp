@@ -9,6 +9,7 @@
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
 #include "EvilRobot.hpp"
+#include "Avatar.hpp"
 //#include "Robot.hpp"
 
 
@@ -474,4 +475,16 @@ void Room::collision(EvilRobot * bot) {
       bot->reverse();
     }
   }
+}
+
+// Makes every bot face the avatar and fire
+void Room::attack(Avatar * avatar) {
+//   VECTOR3D dir;
+
+
+//   for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
+//     dir = avatar->getDir() - (*it)->getDir();
+//     (*it)->setDir(dir);
+
+//   }
 }

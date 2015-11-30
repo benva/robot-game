@@ -27,6 +27,7 @@ public:
   
   VECTOR3D getPos(void) {return position;}
   VECTOR3D getDir(void) {return dir;}
+  void setDir(VECTOR3D newDir);
 
   void setAngle(float newAngle) {angle = newAngle; }
   float getAngle(void) {return angle;}

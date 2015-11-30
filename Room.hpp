@@ -29,6 +29,7 @@ hgt |  |  |dh   |
 
 class Object;
 class Robot;
+class Avatar;
 class EvilRobot;
 class Bullet;
 
@@ -106,6 +107,7 @@ public:
   bool hitbot(Bullet * bul);
   void newBot();
   void move();
+  void attack(Avatar * avatar);
 };
 
 #endif

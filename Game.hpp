@@ -58,7 +58,7 @@ Avatar * avatar;
 
 list<Bullet*> bullets;
 list<Room*> rooms;
-list<EvilRobot*> bots;
+// list<EvilRobot*> bots;
 
 // bools for arrow keys
 bool key_up = false;
