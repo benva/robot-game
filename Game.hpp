@@ -36,10 +36,14 @@ VECTOR3D dir = VECTOR3D(1.0,0.0,0.0);
 VECTOR3D lookAt = VECTOR3D(0.0,0.0,0.0);
 VECTOR3D room_center;
 
-GLfloat light_position0[] = {3.0, 1.0, 3.0,100.0};
+GLfloat light_position0[] = {3.0, 2.0, 3.0,0.0};
 GLfloat light_position1[] = { 6.0,  12.0, 0.0,1.0};
-GLfloat light_diffuse[]   = {1.0, 1.0, 1.0, 1.0};
-GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};
+GLfloat light_diffuse[]   = {0.5, 0.5, 0.5, 1.0};
+GLfloat light_specular[]  = {0.5, 0.5, 0.5, 1.0};
+GLfloat spot_direction[] = {0.0, -1.0, 0.0};
+//GLfloat light_diffuse[]   = {1.0, 1.0, 1.0, 1.0};
+//GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};
+
 GLfloat light_ambient[]   = {0.0, 0.0, 0.0, 1.0};
 
 float camX=0.0, camY=6.0, camZ=22.0, camR=30.0,

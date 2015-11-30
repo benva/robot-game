@@ -79,6 +79,9 @@ void initOpenGL(int w, int h) {
   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
   
   glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
+  //  glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45);
+  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
+
   glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
 
 
@@ -114,7 +117,7 @@ void initOpenGL(int w, int h) {
   VECTOR3D ambient = VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D specular= VECTOR3D(0.0f,0.0f,0.0f);
   VECTOR3D diffuse= VECTOR3D(0.9f,0.5f,0.0f);
-
+  
   for(i=0; i<NUM_TEX; i++) {
     texid[i] = 2000+i; 
  }
@@ -130,6 +133,8 @@ void initOpenGL(int w, int h) {
   loadTexture(5, "textures/rock.bmp");
   loadTexture(6, "textures/wood.bmp");
 
+  //robot texture
+  loadTexture(7, "textures/evil_robot.bmp");
   
   i=-1;
   while(tex[++i] != NULL){
@@ -162,7 +167,7 @@ void initOpenGL(int w, int h) {
   avatar->initRobot(rooms.front());
   
   mod = new OBJModel();
-  mod->load("models/test.obj");
+  mod->load("models/evil_robot.obj");
 }
 
 Room * getRoomAt(int n) {
