@@ -37,7 +37,6 @@ void Robot::draw(GLuint texid) {
   glTranslatef(this->getPos().GetX(), 0, this->getPos().GetZ());
   glRotatef(this->getAngle(), 0, 1, 0);
 
-<<<<<<< HEAD
   Robot::model.draw();
   glPopMatrix();
 
