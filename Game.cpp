@@ -288,6 +288,7 @@ void display(void) {
 }
 
 void reshape(int w, int h) {
+  cout << "W: " << w << " H: " << h << endl;
   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
