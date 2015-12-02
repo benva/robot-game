@@ -81,6 +81,8 @@ private:
 
   list<EvilRobot*> bots;
 
+  int maxBots;
+
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
   VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin, Room * parent);
   VECTOR3D newDir1(int wallid, VECTOR3D up);
@@ -91,6 +93,7 @@ private:
   int getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom);
   bool within_doorway(int wall_dir, int wall_id, VECTOR3D * minBB, VECTOR3D * maxBB);
   void collision(EvilRobot * bot);
+
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall; neighbor[1] = NULL; neighbor[2] = NULL; neighbor[3] = NULL;}
   ~Room();

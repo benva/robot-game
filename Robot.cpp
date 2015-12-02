@@ -98,9 +98,6 @@ bool Robot::hit(Object * b) {
   VECTOR3D botMax = hitBoxMax + position;
   b->getBB(&bulMin,&bulMax);
   
-  cout << bulMin << endl;
-  cout << botMin << endl;
-
   if(bulMin.x < botMin.x) return false;
   if(bulMin.z < botMin.z) return false;
 

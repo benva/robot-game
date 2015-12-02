@@ -150,12 +150,12 @@ void initOpenGL(int w, int h) {
   rooms.push_back(room);
   
   room = new Room(getRoomAt(0),1);
-  room->initRoom();
+  room->initRoom(14,15);
   room->setTextures(texid[5],texid[6]);
   rooms.push_back(room);
 
   room = new Room(getRoomAt(0),3);
-  room->initRoom();
+  room->initRoom(12,8);
   room->setTextures(texid[2],texid[3]);
   rooms.push_back(room);
   
