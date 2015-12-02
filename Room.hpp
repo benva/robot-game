@@ -109,6 +109,7 @@ public:
   void goodbye(Room * room);
   bool hitbot(Bullet * bul);
   void newBot();
+  list<EvilRobot*> getBots() { return bots; }
   void move();
   void attack(Avatar * avatar);
 };

@@ -134,7 +134,8 @@ public:
 		result.z=z-v2.z;
 	}
 
-	bool operator==(const VECTOR3D & rhs) const;
+	bool operator==(const VECTOR3D & rhs) const
+	{ return ((x == rhs.x) && (y == rhs.y) && (z == rhs.z)); }
 	bool operator!=(const VECTOR3D & rhs) const
 	{	return !((*this)==rhs);	}
 
@@ -170,4 +171,4 @@ public:
 
 };
 
-#endif	//VECTOR3D_H
+#endif

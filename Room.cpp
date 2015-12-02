@@ -442,7 +442,7 @@ bool Room::hitbot(Bullet * bul) {
     return false;
 }  
 
-// create new robot
+// Create new robot
 void Room::newBot() {
     EvilRobot * bot;
     bot = new EvilRobot();
@@ -450,45 +450,14 @@ void Room::newBot() {
     bots.push_back(bot);
 }
 
-// Moves all the evil robots around the room they are in
+// Tells every bot to move around the room
 void Room::move() {
-    int dir;
-    bool left, right;
-
-    // Move evil robots
-    for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
-	left = right = false;
-	srand(time(NULL));
-    
-	dir = rand() % 2;
-	dir == 1 ? left = true : right = true;
-
-	collision(*it);
-
-	// While bot can't move forward, turn it left or right randomly
-	while(!(*it)->move(true, false, false, false))
-	    (*it)->move(false, false, left, right);
-    }
+  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it)
+    (*it)->move();
 }
 
-// Checks if any bots are colliding and if so changes their trajectories
-void Room::collision(EvilRobot * bot) {
-    for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
-	if((*it) != bot && (*it)->hit(bot)) {
-	    (*it)->reverse();
-	    bot->reverse();
-	}
-    }
-}
-
-// Makes every bot face the avatar and fire
+// Tells every bot to attack
 void Room::attack(Avatar * avatar) {
-    //   VECTOR3D dir;
-
-
-    //   for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
-    //     dir = avatar->getDir() - (*it)->getDir();
-    //     (*it)->setDir(dir);
-
-    //   }
+  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it)
+    (*it)->attack(avatar);
 }

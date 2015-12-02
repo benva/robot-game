@@ -8,6 +8,7 @@
 #define NUM_ROOMS 16
 #define NUM_BUL 16
 
+
 void initOpenGL(int w, int h);
 void display(void);
 void reshape(int w, int h);
