@@ -21,12 +21,14 @@ using namespace std;
 OBJModel Robot::model;
 
 Robot::Robot(float newX, float newY, float newZ) { 
-   set(newX,newY,newZ);
-    dir.LoadZero();
-    minBB = VECTOR3D(-0.25, -2.0, -0.25);
-    maxBB = VECTOR3D(0.25, 0.0, 0.25);
-    angle = 0.0;
-    health = 100;
+  set(newX,newY,newZ);
+  dir.LoadZero();
+  minBB = VECTOR3D(-0.25, -2.0, -0.25);
+  maxBB = VECTOR3D(0.25, 0.0, 0.25);
+  hitBoxMin = VECTOR3D(-0.75, -2.0, -0.75);
+  hitBoxMax = VECTOR3D(0.75, 0.0, 0.75);
+  angle = 0.0;
+  health = 100;
 }
 
 
@@ -38,10 +40,20 @@ void Robot::draw(GLuint texid) {
   glRotatef(this->getAngle(), 0, 1, 0);
 
   Robot::model.draw();
+  this->drawHitBox();
   glPopMatrix();
 
   this->drawBB();
 
+}
+
+void Robot::drawHitBox() {
+  glPushMatrix();
+  //  glColor3f(1,0,0);
+  glTranslatef(0,1,0);
+  glScalef(hitBoxMax.x, 1.0, hitBoxMax.z);
+  glutWireCube(1.0);
+  glPopMatrix();
 }
 
 void Robot::initRobot(Room * room) {
@@ -81,22 +93,22 @@ bool Robot::move(bool up, bool down, bool left, bool right) {
 
 // Checks if Bullet has hit a Robot or not
 bool Robot::hit(Object * b) {
-  float distance, dx, dy, dz;
+  VECTOR3D bulMin,bulMax;
+  VECTOR3D botMin = hitBoxMin + position;
+  VECTOR3D botMax = hitBoxMax + position;
+  b->getBB(&bulMin,&bulMax);
+  
+  cout << bulMin << endl;
+  cout << botMin << endl;
 
-  dx = this->getPos().GetX() - b->getPos().GetX();
-  dy = this->getPos().GetY() - b->getPos().GetY();
-  dz = this->getPos().GetZ() - b->getPos().GetZ();
-  distance = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
+  if(bulMin.x < botMin.x) return false;
+  if(bulMin.z < botMin.z) return false;
 
-  // cout << "robot " << this->position.GetX() << " " << this->position.GetY() << " " << this->position.GetZ() << " " << endl;
-  // cout << "bullet " << b->getPos().GetX() << " " << b->getPos().GetY() << " " << b->getPos().GetZ() << " " << endl;
-  // cout << "distance " << distance << endl;
-  // cout << endl;
+  if(bulMax.x > botMax.x) return false;
+  if(bulMax.z > botMax.z) return false;
+      
+  return true;
 
-  if(distance < 0.5)
-    return true;
-
-  return false;
 }
 
 // Reverses a Robot's direction

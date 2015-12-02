@@ -19,7 +19,7 @@ class Robot : public Object {
 
 protected:
   int health;
-
+  VECTOR3D hitBoxMin, hitBoxMax;
 public:
   static OBJModel model;
   // Constructors
@@ -39,6 +39,8 @@ public:
   int getHealth(void) {return health; }
 
   void reverse();
+  
+  void drawHitBox();
 };
 
 #endif

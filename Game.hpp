@@ -47,7 +47,8 @@ GLfloat light_specular[]  = {1.0, 1.0, 1.0, 1.0};
 
 GLfloat light_ambient[]   = {0.0, 0.0, 0.0, 1.0};
 
-float camX=0.0, camY=6.0, camZ=22.0, camR=30.0,
+float camX=0.0, camY=6.0, camZ=22.0,
+  camR=10.0,
   lookAtX=0.0, lookAtY=0.0, lookAtZ=0.0,
   camTheta, camPhi;
 
