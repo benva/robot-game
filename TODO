@@ -1,0 +1,10 @@
+p  c
+2 [ ]	Robots Appear in random positions (not in same room as avatar)
+2 [ ]	Robots appear at random times
+1 [ ]	BBox collision of hit method for robot (requires additional bbox for bots)
+2 [ ]	Collision detection between bots
+3 [ ]	'more' random movement of evil bots
+1 [ ]	attack functionality of evil bots
+2 [ ]	keep testing for death of all evil bots || death of player for game end
+
+b [ ]	bump map floors and walls (maybe also bots) bonus 0.5
