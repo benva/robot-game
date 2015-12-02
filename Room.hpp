@@ -90,7 +90,6 @@ private:
   TextureQuad * makeTQ(VECTOR3D origin, float length, float width, VECTOR3D dir1v, VECTOR3D dir2v);
   int getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom);
   bool within_doorway(int wall_dir, int wall_id, VECTOR3D * minBB, VECTOR3D * maxBB);
-  void collision(EvilRobot * bot);
 public:
   Room(Room* newParent=NULL, int pwall=2) {neighbor[0] = newParent; parent_wall = pwall; neighbor[1] = NULL; neighbor[2] = NULL; neighbor[3] = NULL;}
   ~Room();
@@ -106,6 +105,7 @@ public:
   void goodbye(Room * room);
   bool hitbot(Bullet * bul);
   void newBot();
+  list<EvilRobot*> getBots() { return bots; }
   void move();
   void attack(Avatar * avatar);
 };
