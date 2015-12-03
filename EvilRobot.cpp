@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <list>
+#include <typeinfo>
 
 #include "VECTOR3D.h"
 #include "QuadMesh.h"
@@ -32,8 +33,8 @@ void EvilRobot::move() {
   collision();  
 
   // While bot can't move forward, turn it left or right randomly
-  if(!((Robot*)this)->move(true, false, false, false))
-      ((Robot*)this)->move(false, false, left, right);
+  if(!((Robot*)this)->move(true, false, false, false, true))
+      ((Robot*)this)->move(false, false, left, right, true);
 }
 
 // Checks if any bots are colliding and if so changes their trajectories

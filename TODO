@@ -4,7 +4,8 @@ p  c
 1 [x]	BBox collision of hit method for robot (requires additional bbox for bots)
 2 [ ]	Collision detection between bots
 3 [ ]	'more' random movement of evil bots
-1 [ ]	attack functionality of evil bots
+1 [x]	attack functionality of evil bots
 2 [ ]	keep testing for death of all evil bots || death of player for game end
+1 [x]	Wall collisions for EvilBots 
 
 b [ ]	bump map floors and walls (maybe also bots) bonus 0.5

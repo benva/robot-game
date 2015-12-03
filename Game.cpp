@@ -309,7 +309,7 @@ void tick(int value) {
   Bullet * bullet = NULL;
   // Mode A: static rooms
   // Update Avatar position
-  avatar->move(key_up, key_down, key_left, key_right);
+  avatar->move(key_up, key_down, key_left, key_right, false);
 
   // Move all Bullets
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)

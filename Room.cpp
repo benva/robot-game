@@ -364,7 +364,7 @@ bool into_next_room(VECTOR3D pos, VECTOR3D * minRoom, VECTOR3D * maxRoom, int w)
 }
 
 // Check if tx and tz displacement will cause o to be in a wall
-bool Room::intersects(Object * o, float tx, float tz) {
+bool Room::intersects(Object * o, float tx, float tz, bool stay) {
     VECTOR3D minBB, maxBB;
     VECTOR3D minRoom, maxRoom;
     int wall_id;
@@ -375,6 +375,12 @@ bool Room::intersects(Object * o, float tx, float tz) {
     moveBB(&minBB,&maxBB, tx, tz);
     wall_id = getRoomBB(&minRoom, &maxRoom);
 
+    if(stay) {
+	minBB.x -= 1;
+	maxBB.x += 1;
+	minBB.z -= 1;
+	maxBB.z += 1;
+    }
     // Check if o is within main room boundaries
     // if yes, return false.
     wall_dir = withinRoom(&minBB,&maxBB,&minRoom,&maxRoom);
@@ -385,21 +391,22 @@ bool Room::intersects(Object * o, float tx, float tz) {
 
     // cout << wall_id << " " << neighbor[wall_id] << endl;
 
-    // if the wall doesn't have a door, return true
-    if(neighbor[wall_id] == NULL) return true;
-    // else wall has a door, check if it's within the doorway
-    else {
-	if(within_doorway(wall_dir, wall_id, &minBB, &maxBB)) {
-	    // if yes check if o is past doorframe into next room,
-	    if(into_next_room(o->getPos(), &minRoom, &maxRoom, wall_dir)) {
-		// if yes, update os room pointer to next room
-		o->setCurrentRoom(neighbor[wall_id]);
+    if(!stay) {
+	// if the wall doesn't have a door, return true
+	if(neighbor[wall_id] == NULL) return true;
+	// else wall has a door, check if it's within the doorway
+	else {
+	    if(within_doorway(wall_dir, wall_id, &minBB, &maxBB)) {
+		// if yes check if o is past doorframe into next room,
+		if(into_next_room(o->getPos(), &minRoom, &maxRoom, wall_dir)) {
+		    // if yes, update os room pointer to next room
+		    o->setCurrentRoom(neighbor[wall_id]);
+		    return false;
+		}
 		return false;
 	    }
-	    return false;
 	}
     }
-
     // change to return true later
     return true;  
 }

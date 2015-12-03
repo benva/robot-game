@@ -38,15 +38,15 @@ void Bullet::draw(GLuint texid) {
 
   glPopMatrix();
 
-  this->drawBB();
+  //  this->drawBB();
 }
 
 bool Bullet::move() {
-  if(current_room->intersects(this, (dir*BUL_INC).GetX(), (dir*BUL_INC).GetZ()))
+    if(current_room->intersects(this, (dir*BUL_INC).GetX(), (dir*BUL_INC).GetZ(),false))
     return false;
   
   position += dir * BUL_INC;
-  
+
   if(current_room->hitbot(this))
     return false;
 

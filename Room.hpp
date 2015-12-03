@@ -104,7 +104,7 @@ public:
     bool addDoor(int wallid, float dd=1.0, float dh=2.5, float dwidth=1.5);
     bool addNeighbor(Room* newNeighbor, int wallid);
     void setTextures(GLuint wall, GLuint floor, GLint door=-1) { wall_texture = wall; floor_texture = floor; door==-1? door_texture = wall : door_texture = door; }
-    bool intersects(Object * o, float tx, float tz);
+    bool intersects(Object * o, float tx, float tz, bool stay);
     VECTOR3D getCenter(void);
     Room * getNeighbor(int i) { return neighbor[i]; }
     void setNeighbor(int i, Room * room) { neighbor[i] = room; }

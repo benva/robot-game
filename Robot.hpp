@@ -18,30 +18,30 @@ class OBJModel;
 class Robot : public Object {
 
 protected:
-  int health;
-  VECTOR3D hitBoxMin, hitBoxMax;
+    int health;
+    VECTOR3D hitBoxMin, hitBoxMax;
     unsigned int shootTimeout;
 public:
-  static OBJModel model;
-  // Constructors
-  Robot(float newX=1.0, float newY=2.0, float newZ=2.0);
+    static OBJModel model;
+    // Constructors
+    Robot(float newX=1.0, float newY=2.0, float newZ=2.0);
 
-  ~Robot(){}  
-  void initRobot(Room * room);
+    ~Robot(){}  
+    void initRobot(Room * room);
   
-  void draw(GLuint texid);
+    void draw(GLuint texid);
 
-  bool move(bool up, bool down, bool left, bool right);
+    bool move(bool up, bool down, bool left, bool right, bool stay);
 
-  void damage(int hp) { health -= hp; }
+    void damage(int hp) { health -= hp; }
 
-  bool hit(Object * b);
+    bool hit(Object * b);
 
-  int getHealth(void) {return health; }
+    int getHealth(void) {return health; }
 
-  void reverse();
+    void reverse();
   
-  void drawHitBox();
+    void drawHitBox();
 };
 
 #endif
