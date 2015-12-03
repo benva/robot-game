@@ -325,7 +325,7 @@ void tick(int value) {
   for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it) {
     if((*it) == current)
       (*it)->attack(avatar);
-    else (*it)->move();
+    else (*it)->move(avatar);
   }
 
   /*  if(bullet && !bullet->move()){ 

@@ -108,7 +108,7 @@ bool Robot::hit(Object * b) {
 
 }
 
-// Reverses a Robot's direction
+// Reverses a Robot's directionx
 void Robot::reverse() {
   setAngle(getAngle()+180);
 }

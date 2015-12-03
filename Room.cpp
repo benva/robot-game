@@ -76,6 +76,8 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     maxBots < 2 ? maxBots = 2 : true;
     maxBots > 7 ? maxBots = 7 : true;
 
+    timetospawn = 2;
+
     floor_texture = 2000;
     wall_texture = 2001;
     door_texture = 2001;
@@ -434,8 +436,11 @@ int Room::getRoomBB(VECTOR3D * minRoom, VECTOR3D * maxRoom) {
 bool Room::hitbot(Bullet * bul) {  
     for(list<EvilRobot*>::iterator it=bots.begin(); it!=bots.end(); ++it)
 	if((*it)->hit(bul)) {
-	    delete (*it);
-	    bots.remove(*it);
+	    (*it)->damage(50);	    
+	    if((*it)->getHealth() <= 0) {
+		delete (*it);
+		bots.remove(*it);
+	    }
 	    return true;
 	}
 
@@ -451,9 +456,22 @@ void Room::newBot() {
 }
 
 // Tells every bot to move around the room
-void Room::move() {
-  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it)
-    (*it)->move();
+void Room::move(Avatar * avatar) {
+    if(bots.size() < maxBots) {
+	timetospawn--;	
+	if(timetospawn == 0) {
+	    if(avatar->getCurrentRoom() == this)
+		timetospawn++;
+	    else {
+		this->newBot();
+		cout << "new bot" << endl;
+		timetospawn = 1700;
+	    }
+	}
+    }
+
+    for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it)
+	(*it)->move();
 }
 
 // Tells every bot to attack
