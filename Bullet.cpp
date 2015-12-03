@@ -10,6 +10,7 @@
 #include "QuadMesh.h"
 #include "Room.hpp"
 #include "Robot.hpp"
+#include "Avatar.hpp"
 
 #include "Bullet.hpp"
 
@@ -41,11 +42,17 @@ void Bullet::draw(GLuint texid) {
   //  this->drawBB();
 }
 
-bool Bullet::move() {
+bool Bullet::move(Avatar * avatar) {
     if(current_room->intersects(this, (dir*BUL_INC).GetX(), (dir*BUL_INC).GetZ(),false))
     return false;
   
   position += dir * BUL_INC;
+  
+  if(avatar->hit(this)) {
+      avatar->damage(20);
+      cout << "HP: " << avatar->getHealth() << endl;
+      return false;      
+  }
 
   if(current_room->hitbot(this))
     return false;

@@ -313,7 +313,7 @@ void tick(int value) {
 
   // Move all Bullets
   for(list<Bullet*>::iterator it=bullets.begin(); it!=bullets.end();)
-    if(!(*it)->move()) {
+    if(!(*it)->move(avatar)) {
       list<Bullet*>::iterator del=it;
       ++it;
       delete (*del);      
@@ -330,18 +330,8 @@ void tick(int value) {
       else (*it)->move(avatar);
   }
 
-  /*  if(bullet && !bullet->move()){ 
-    delete bullet; 
-    bullet = NULL; 
-    }*/
 
-  /*  if(bullet && bot && bot->hit(bullet)) { 
-    delete bot; 
-    bot = NULL; 
-    delete bullet;
-    bullet = NULL;
-    }*/
-  
+
   camera = avatar->getPos();
   dir = avatar->getDir();
   lookAt = camera+dir;
@@ -357,7 +347,7 @@ void tick(int value) {
     
   }
   room_center = avatar->getCurrentRoom()->getCenter();
-  //  cout << room_center << endl;
+
   light_position0[0] = room_center.GetX();
   light_position0[2] = room_center.GetZ();
   

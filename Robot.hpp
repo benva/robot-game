@@ -33,7 +33,9 @@ public:
     bool move(bool up, bool down, bool left, bool right, bool stay);
 
     void damage(int hp) { health -= hp; }
-
+    
+    void getBotBB(VECTOR3D * botMin, VECTOR3D * botMax);
+    bool hit(Robot * r);
     bool hit(Object * b);
 
     int getHealth(void) {return health; }

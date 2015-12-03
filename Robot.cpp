@@ -30,7 +30,6 @@ Robot::Robot(float newX, float newY, float newZ) {
     hitBoxMax = VECTOR3D(0.75, 0.0, 0.75);
     angle = 0.0;
     health = 100;
-    shootTimeout = 1;
 }
 
 
@@ -91,6 +90,28 @@ bool Robot::move(bool up, bool down, bool left, bool right, bool stay) {
 	    return true;
 	}
     return false;
+}
+
+void Robot::getBotBB(VECTOR3D * botMin, VECTOR3D * botMax) {
+    *botMin = this->hitBoxMin + this->position;
+    *botMax = this->hitBoxMax + this->position;    
+}
+
+// Checks if Bullet has hit a Robot or not
+bool Robot::hit(Robot * r) {
+    VECTOR3D bot2Min,bot2Max;
+    VECTOR3D botMin = hitBoxMin + position;
+    VECTOR3D botMax = hitBoxMax + position;
+    r->getBotBB(&bot2Min,&bot2Max);
+  
+    if(bot2Min.x < botMin.x) return false;
+    if(bot2Min.z < botMin.z) return false;
+
+    if(bot2Max.x > botMax.x) return false;
+    if(bot2Max.z > botMax.z) return false;
+
+    return true;
+
 }
 
 // Checks if Bullet has hit a Robot or not

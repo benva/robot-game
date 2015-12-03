@@ -8,6 +8,7 @@
 using namespace std;
 
 class Robot;
+class Avatar;
 class Bullet : public Object {
 private:
   GLUquadric * q;
@@ -20,7 +21,7 @@ public:
 
 	void draw(GLuint texid);
 
-	bool move();
+	bool move(Avatar * avatar);
 };
 
 
