@@ -27,7 +27,7 @@ void EvilRobot::move() {
   dir = rand() % 2;
   dir == 1 ? left = true : right = true;
 
-  collision();  
+  collision();
 
   // While bot can't move forward, turn it left or right randomly
   while(!((Robot*)this)->move(true, false, false, false))
