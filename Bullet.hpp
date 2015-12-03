@@ -2,7 +2,7 @@
 #define BULLET_H
 
 #define BUL_INC 5
-
+#include <list>
 #include "Object.hpp"
 
 using namespace std;
@@ -22,5 +22,6 @@ public:
 
 	bool move();
 };
+
 
 #endif

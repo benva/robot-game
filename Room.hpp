@@ -80,6 +80,7 @@ private:
     GLuint door_texture;
 
     list<EvilRobot*> bots;
+    list<Bullet*> bullets;
 
     int maxBots;
     int timetospawn;
@@ -112,7 +113,7 @@ public:
     void newBot();
     list<EvilRobot*> getBots() { return bots; }
     void move(Avatar * avatar);
-    void attack(Avatar * avatar);
+    void attack(Avatar * avatar, list<Bullet*> * bullets);
 };
 
 #endif

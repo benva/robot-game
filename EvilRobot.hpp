@@ -8,16 +8,15 @@ using namespace std;
 class Avatar;
 class EvilRobot : public Robot {
 private:
-  void collision();
+    void collision();
 
 public:
 
   ~EvilRobot(){
     cout << "vaporizing bot" << endl;
   }
-
-  void move();
-  void attack(Avatar * avatar);
+    void move();
+    Bullet* attack(Avatar * avatar);
 };
 
 #endif

@@ -29,6 +29,7 @@ Robot::Robot(float newX, float newY, float newZ) {
   hitBoxMax = VECTOR3D(0.75, 0.0, 0.75);
   angle = 0.0;
   health = 100;
+  shootTimeout = 1;
 }
 
 
@@ -103,7 +104,7 @@ bool Robot::hit(Object * b) {
 
   if(bulMax.x > botMax.x) return false;
   if(bulMax.z > botMax.z) return false;
-      
+
   return true;
 
 }

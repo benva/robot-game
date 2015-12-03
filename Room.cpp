@@ -475,7 +475,14 @@ void Room::move(Avatar * avatar) {
 }
 
 // Tells every bot to attack
-void Room::attack(Avatar * avatar) {
-  for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it)
-    (*it)->attack(avatar);
+void Room::attack(Avatar * avatar, list<Bullet*> * bullets) {
+    Bullet * bullet=NULL;
+    for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
+	bullet = (*it)->attack(avatar);
+	if( bullet != NULL) {
+	    bullets->push_back(bullet);
+	    bullet = NULL;
+	}
+    }
 }
+

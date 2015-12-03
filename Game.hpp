@@ -62,9 +62,8 @@ Avatar * avatar;
 //EvilRobot * bot;
 //Bullet * bullet;
 
-list<Bullet*> bullets;
 list<Room*> rooms;
-
+list<Bullet*> bullets;
 //list<EvilRobot*> bots;
 //OBJModel * robotModel;
 

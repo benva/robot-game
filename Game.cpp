@@ -306,6 +306,7 @@ void tick(int value) {
     updateRooms(avatar->getCurrentRoom());
   */
   Room * current;
+  Bullet * bullet = NULL;
   // Mode A: static rooms
   // Update Avatar position
   avatar->move(key_up, key_down, key_left, key_right);
@@ -323,9 +324,10 @@ void tick(int value) {
   // If avatar is in room, attack them, otherwise move bots around room
   current = avatar->getCurrentRoom();
   for(list<Room*>::iterator it=rooms.begin(); it!=rooms.end(); ++it) {
-    if((*it) == current)
-      (*it)->attack(avatar);
-    else (*it)->move(avatar);
+      if((*it) == current) {
+	  (*it)->attack(avatar, &bullets);
+      }
+      else (*it)->move(avatar);
   }
 
   /*  if(bullet && !bullet->move()){ 

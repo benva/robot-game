@@ -17,6 +17,7 @@
 #include "EvilRobot.hpp"
 
 #define ROT_INC_E 1
+
 // Makes the bot move around its current room randomly
 void EvilRobot::move() {
   int dir;
@@ -49,12 +50,13 @@ void EvilRobot::collision() {
 }
 
 // Makes the bot face the avatar and fire
-void EvilRobot::attack(Avatar * avatar) {
-  Bullet * bullet;
+Bullet* EvilRobot::attack(Avatar * avatar) {
+  Bullet * bullet = NULL;
   VECTOR3D dir;
   float targAngle,currAngle,angle;
   float rot;
   float thresh = 1.5;
+  float diff;
   dir = avatar->getPos() - this->getPos();
 
   targAngle = atan2f(dir.x, dir.z)*180/M_PI;
@@ -62,23 +64,30 @@ void EvilRobot::attack(Avatar * avatar) {
   
   cout << currAngle << " " << targAngle << endl;
   
-  if(abs(targAngle-currAngle) < 180) {
-      if(targAngle+thresh < currAngle) {
-	  this->angle -= ROT_INC_E;
-      } else if (targAngle-thresh > currAngle) {
-	  this->angle += ROT_INC_E;
+  rot = -ROT_INC_E;
+  diff = targAngle-currAngle;
+  if( diff >= 0 )
+      rot*=-1;
+  
+  if(abs(diff) > 180)
+      rot*=-1;
+  cout << diff << endl;
+  if(abs(diff) > 2) {
+      this->angle += rot;
+  } else {
+      cout << shootTimeout << endl;
+      if(this->shootTimeout == 0) {
+	  cout << "FIRE" << endl;
+	  bullet = new Bullet(this);
+	  this->shootTimeout = 100;
       }
-  }else {
-      if(targAngle+thresh < currAngle) {
-	  this->angle += ROT_INC_E;
-      } else if (targAngle-thresh > currAngle) {
-	  this->angle -= ROT_INC_E;
-      }
+
   }
+  if(shootTimeout != 0)
+      this->shootTimeout--;
   angle = (this->angle*M_PI)/180;
   this->dir.SetX(MOV_INC*sin(angle));
   this->dir.SetZ(MOV_INC*cos(angle));      
-
-  bullet = new Bullet(this);
-  // bullets.push_back(bullet);
+  
+  return bullet;
 }

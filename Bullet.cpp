@@ -18,6 +18,7 @@ Bullet::Bullet(Robot * r) {
     position = r->getPos();
     
     position += (dir.CrossProduct(VECTOR3D(0,1,0)))*7;
+    position += dir * 5;
 
     q = gluNewQuadric();
     minBB = VECTOR3D(-0.1,0,-0.1);
