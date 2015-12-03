@@ -15,7 +15,7 @@ private:
 public:
     EvilRobot();
     ~EvilRobot(){
-	cout << "vaporizing bot" << endl;
+
     }
     void move();
     Bullet* attack(Avatar * avatar);

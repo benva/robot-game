@@ -63,7 +63,7 @@ Avatar * avatar;
 list<Room*> rooms;
 list<Bullet*> bullets;
 
-char * end_game;
+const char * end_game;
 // bools for arrow keys
 bool key_up = false;
 bool key_down = false;

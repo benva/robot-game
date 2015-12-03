@@ -146,7 +146,7 @@ void initOpenGL(int w, int h) {
     // then add them to the room set with insert
 
     room = new Room();
-    room->initRoom();
+    room->initRoom(12,14);
     rooms.push_back(room);
   
     room = new Room(getRoomAt(0),1);
@@ -155,12 +155,12 @@ void initOpenGL(int w, int h) {
     rooms.push_back(room);
 
     room = new Room(getRoomAt(0),3);
-    room->initRoom(12,8);
+    room->initRoom(12,15);
     room->setTextures(texid[2],texid[3]);
     rooms.push_back(room);
   
     room = new Room(getRoomAt(2),3);
-    room->initRoom(6,6);
+    room->initRoom(13,10);
     room->setTextures(texid[4],texid[0]);
     rooms.push_back(room);
   
@@ -316,11 +316,11 @@ void display(void) {
 	glColor3f(1.0f,0.0f,0.0f);
 	glRasterPos2i(WIDTH/2-35,HEIGHT/2);
 	char string2[] = "hit r to restart";
-	for(int i=0; i<sizeof(end_game); i++) {
+	for(unsigned int i=0; i<sizeof(end_game); i++) {
 	    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, end_game[i]);
 	}
 	glRasterPos2i(WIDTH/2-20, HEIGHT/2-20);
-	for(int i=0; i<sizeof(string2); i++) {
+	for(unsigned int i=0; i<sizeof(string2); i++) {
 	    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, string2[i]);
 	}
 	glMatrixMode(GL_MODELVIEW);

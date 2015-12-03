@@ -17,7 +17,7 @@ public:
     Bullet(Robot * r);
 
     ~Bullet() {
-	cout << "deleting bullet" << endl;
+
     }
 
     void draw(GLuint texid);
