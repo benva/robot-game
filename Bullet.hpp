@@ -11,17 +11,18 @@ class Robot;
 class Avatar;
 class Bullet : public Object {
 private:
-  GLUquadric * q;
+    GLUquadric * q;
+    Robot * me;
 public:
-  Bullet(Robot * r);
+    Bullet(Robot * r);
 
-  ~Bullet() {
-    cout << "deleting bullet" << endl;
-  }
+    ~Bullet() {
+	cout << "deleting bullet" << endl;
+    }
 
-	void draw(GLuint texid);
+    void draw(GLuint texid);
 
-	bool move(Avatar * avatar);
+    bool move(Avatar * avatar);
 };
 
 

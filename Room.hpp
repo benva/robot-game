@@ -82,7 +82,7 @@ private:
     list<EvilRobot*> bots;
     list<Bullet*> bullets;
 
-    int maxBots;
+    unsigned int maxBots;
     int timetospawn;
 
     VECTOR3D calcNewOrigin(int wallid, VECTOR3D origin);
@@ -114,6 +114,8 @@ public:
     list<EvilRobot*> getBots() { return bots; }
     void move(Avatar * avatar);
     void attack(Avatar * avatar, list<Bullet*> * bullets);
+    void setTimeToSpawn(int t2s) { this->timetospawn = t2s; }
+    bool empty();
 };
 
 #endif

@@ -63,6 +63,7 @@ Avatar * avatar;
 list<Room*> rooms;
 list<Bullet*> bullets;
 
+char * end_game;
 // bools for arrow keys
 bool key_up = false;
 bool key_down = false;
@@ -72,4 +73,5 @@ bool key_left = false;
 int mouse_x, mouse_y;
 
 bool above_view=false;
+bool game_over=false;
 #endif

@@ -25,6 +25,7 @@ Bullet::Bullet(Robot * r) {
     minBB = VECTOR3D(-0.1,0,-0.1);
     maxBB = VECTOR3D(0.1,0,0.1);
     current_room = r->getCurrentRoom();
+    me = r;
 }
 
 void Bullet::draw(GLuint texid) {
@@ -48,7 +49,7 @@ bool Bullet::move(Avatar * avatar) {
   
   position += dir * BUL_INC;
   
-  if(avatar->hit(this)) {
+  if(avatar->hit(this) && me!= avatar) {
       avatar->damage(20);
       cout << "HP: " << avatar->getHealth() << endl;
       return false;      

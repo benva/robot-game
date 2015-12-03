@@ -38,6 +38,11 @@ void Room::goodbye(Room * room) {
 	}
 }
 
+bool Room::empty() {
+    if(bots.size() == 0) return true;
+    else return false;
+}
+
 void Room::draw() {
     int i,j;
 
@@ -76,7 +81,7 @@ bool Room::initRoom(float newLength, float newWidth, float newHeight) {
     maxBots < 2 ? maxBots = 2 : true;
     maxBots > 7 ? maxBots = 7 : true;
 
-    timetospawn = 2;
+    timetospawn = 1;
 
     floor_texture = 2000;
     wall_texture = 2001;
@@ -471,7 +476,6 @@ void Room::move(Avatar * avatar) {
 		timetospawn++;
 	    else {
 		this->newBot();
-		cout << "new bot" << endl;
 		timetospawn = 1700;
 	    }
 	}
@@ -481,7 +485,7 @@ void Room::move(Avatar * avatar) {
 	(*it)->move();
 }
 
-// Tells every bot to attack
+
 void Room::attack(Avatar * avatar, list<Bullet*> * bullets) {
     Bullet * bullet=NULL;
     for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {

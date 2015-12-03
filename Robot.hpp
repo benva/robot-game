@@ -38,6 +38,7 @@ public:
     bool hit(Robot * r);
     bool hit(Object * b);
 
+    void setHealth(int hp) {this->health = hp; }
     int getHealth(void) {return health; }
 
     void reverse();
