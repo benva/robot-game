@@ -20,7 +20,6 @@ class Robot : public Object {
 protected:
     int health;
     VECTOR3D hitBoxMin, hitBoxMax;
-    unsigned int shootTimeout;
 public:
     static OBJModel model;
     // Constructors

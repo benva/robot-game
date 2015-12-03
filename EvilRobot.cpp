@@ -19,22 +19,43 @@
 
 #define ROT_INC_E 1
 
+EvilRobot::EvilRobot() {
+    this->shootTimeout = 1;
+    this->rotateTimeout = 0;
+    this->forwardTimeout = 30;
+}
+
 // Makes the bot move around its current room randomly
 void EvilRobot::move() {
   int dir;
   bool left, right;
 
-  left = right = false;
-  srand(time(NULL));
+  if(this->forwardTimeout == 0) {
+     left = right = false;
+     srand(time(NULL));
     
-  dir = rand() % 2;
-  dir == 1 ? left = true : right = true;
+     dir = rand() % 2;
+     dir == 1 ? left = true : right = true;     
+     forwardTimeout--;
+  }
+
+  if(this->rotateTimeout == 0) {
+      this->forwardTimeout = 30;
+  }
 
   collision();  
 
-  // While bot can't move forward, turn it left or right randomly
-  if(!((Robot*)this)->move(true, false, false, false, true))
-      ((Robot*)this)->move(false, false, left, right, true);
+  if(this->forwardTimeout > 0) {
+      if(!((Robot*)this)->move(true, false, false, false, true)) {
+	  this->rotateTimeout = 30;
+      }
+      this->forwardTimeout--;
+  }
+
+  if(this->rotateTimeout > 0) {
+      ((Robot*)this)->move(false, false, left, right, true);      
+      this->rotateTimeout--;
+  }
 }
 
 // Checks if any bots are colliding and if so changes their trajectories
@@ -44,8 +65,7 @@ void EvilRobot::collision() {
 
   for(list<EvilRobot*>:: iterator it=bots.begin(); it!=bots.end(); ++it) {
     if((*it) != this && (*it)->hit(this)) {
-      (*it)->reverse();
-      this->reverse();
+	rotateTimeout = 20;
     }
   }
 }

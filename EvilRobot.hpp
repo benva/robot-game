@@ -9,12 +9,14 @@ class Avatar;
 class EvilRobot : public Robot {
 private:
     void collision();
-
+    int shootTimeout;
+    int rotateTimeout;
+    int forwardTimeout;
 public:
-
-  ~EvilRobot(){
-    cout << "vaporizing bot" << endl;
-  }
+    EvilRobot();
+    ~EvilRobot(){
+	cout << "vaporizing bot" << endl;
+    }
     void move();
     Bullet* attack(Avatar * avatar);
 };
