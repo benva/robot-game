@@ -29,7 +29,6 @@ BONUS: Imported 'cool' looking robot designed using a modelling package
 
 ###GAME CONTROLS###
 ```
-#!fundamental
 Arrow keys:	move around
 Space Bar:	Shoot
 r:    		Reset game
@@ -37,7 +36,6 @@ r:    		Reset game
 
 ###SECRET CONTROLS (used for debugging and test, not for gameplay)###
 ```
-#!fundamental
 b:     		generate a new bot in one room
 F1:		go into arial view over player
 Left Mouse btn:	Hold and drag to view from above
