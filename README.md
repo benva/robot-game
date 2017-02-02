@@ -2,33 +2,30 @@
 
 ##COMPILING & RUNNING
 
-This program is to be compiled and run on a linux machine.
+This program is to be compiled and run on a Linux machine.
 There is a makefile included in this directory. Run it like any other makefile:
 
 `make`
 
-And to remove all object files, exectuables, etc, run:
-
-`make clean`
-
-This will produce an exectuable named 'Game'. Run with:
+This will produce an executable named 'Game'. Run with:
 
 `./Game`
 
-All required features were implemented.
-BONUS: Imported 'cool' looking robot designed using a modelling package
+And to remove all object files, executables, etc, run:
+
+`make clean`
 
 ##GAME CONTROLS
 ```
-Arrow keys:	move around
-Space Bar:	Shoot
-r:    		Reset game
+ARROWS:	    Move around
+SPACE BAR:	Shoot
+R:    		Reset game
 ```
 
-##SECRET CONTROLS 
-###(used for debugging and test, not for gameplay)
+##SECRET CONTROLS
+Used for debugging and test, not for gameplay
 ```
-b:     		generate a new bot in one room
-F1:		go into arial view over player
-Left Mouse btn:	Hold and drag to view from above
+B:          Generate a new bot in one room
+F1:         Go into arial view over player
+L MOUSE:    Hold and drag to view from above
 ```
