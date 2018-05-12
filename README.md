@@ -1,6 +1,6 @@
-#Robot Game
+# Robot Game
 
-##COMPILING & RUNNING
+## SETUP
 
 This program is to be compiled and run on a Linux machine.
 There is a makefile included in this directory. Run it like any other makefile:
@@ -15,15 +15,18 @@ And to remove all object files, executables, etc, run:
 
 `make clean`
 
-##GAME CONTROLS
+## CONTROLS
+
 ```
-ARROWS:	    Move around
-SPACE BAR:	Shoot
-R:    		Reset game
+ARROWS:     Move
+SPACE BAR:  Shoot
+R:          Reset game
 ```
 
-##SECRET CONTROLS
+## SECRETS
+
 Used for debugging and test, not for gameplay
+
 ```
 B:          Generate a new bot in one room
 F1:         Go into arial view over player
